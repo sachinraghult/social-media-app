@@ -1,0 +1,16 @@
+.SinglePost {
+  display: flex;
+  width: 100%;
+}
+
+.SinglePostMainContainer {
+  flex: 5.5;
+}
+
+.SinglePostContainer {
+  padding: 20px;
+}
+
+.dummy {
+  flex: 6;
+}
