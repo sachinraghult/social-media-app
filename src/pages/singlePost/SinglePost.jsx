@@ -2,6 +2,7 @@ import Topbar from "../../components/topbar/Topbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import "./SinglePost.css";
 import Post from "../../components/post/Post";
+import Comments from "../../components/comments/Comments";
 
 export default function SinglePost() {
   return (
@@ -25,8 +26,10 @@ export default function SinglePost() {
             />
             
           </div>
+          
         </div>
-        <div className="dummy"></div>
+        
+        <div className="dummy"><Comments /></div>
       </div>
     </>
   );
