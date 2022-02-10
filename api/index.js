@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const auth = require("./routes/auth");
+const post = require("./routes/post");
 
 const app = express();
 
@@ -17,6 +18,7 @@ mongoose
   .catch((err) => console.log(err));
 
 app.use("/api/auth", auth);
+app.use("/api/post", post);
 
 app.get("/", (req, res) => res.send("hello world"));
 
