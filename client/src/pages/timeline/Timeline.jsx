@@ -16,7 +16,7 @@ function Timeline() {
                     <h1> A day in my 'sleepy' life 😅</h1>
                     <ul className="sessions">
                     <ComponentContainer>
-                        <img src="https://lh3.googleusercontent.com/d/15u7_BI_dpNqfC4751d3aqPwQli5KSP9z" />
+                        <img src="https://lh3.googleusercontent.com/d/15u7_BI_dpNqfC4751d3aqPwQli5KSP9z" referrerPolicy="no-referrer"/>
                         <ContentContainer>
                             <Content>
                                 <div className="time">09:00 AM</div>
