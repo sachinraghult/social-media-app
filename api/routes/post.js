@@ -62,7 +62,7 @@ router.get("/:id", verify, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id).populate(
       "userId",
-      "name username _id photo"
+      "name username _id profilePic"
     );
     res.status(200).json(post._doc);
   } catch (err) {
@@ -79,15 +79,22 @@ router.get("/", verify, async (req, res) => {
     let posts;
     if (feed === "true") {
       const user = await User.findById(req.user._id);
-      const posts = await Post.find({ userId: { $in: user.followers } });
+      posts = await Post.find({
+        userId: { $in: user.followers },
+      })
+        .sort({ timestamps: -1 })
+        .populate("userId", "name username _id profilePic");
     } else if (userName) {
       const user = await User.findOne({ username: userName });
       posts = await Post.find({ userId: user._id }).populate(
         "userId",
-        "name username _id photo"
+        "name username _id profilePic"
       );
     } else {
-      posts = await Post.find().populate("userId", "name username _id photo");
+      posts = await Post.find().populate(
+        "userId",
+        "name username _id profilePic"
+      );
     }
 
     res.status(200).json(posts);
