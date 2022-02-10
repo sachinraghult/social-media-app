@@ -1,0 +1,73 @@
+.TimelineContainer {
+  display: flex;
+  width: 100%;
+}
+
+.flex {
+  flex: 9;
+  background: linear-gradient(45deg, #209cff, #68e0cf);
+}
+
+ul,
+li {
+  list-style: none;
+  padding: 0;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 1rem;
+  padding: 3rem 0;
+}
+
+.wrapper {
+  background: #eaf6ff;
+  padding: 2rem;
+  border-radius: 15px;
+  width: 80%;
+}
+
+h1 {
+  font-size: 1.1rem;
+  font-family: sans-serif;
+}
+
+.sessions {
+  margin-top: 2rem;
+  border-radius: 12px;
+  position: relative;
+}
+
+.time {
+  color: #2a2839;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+}
+
+@media screen and (min-width: 601px) {
+  .time {
+    font-size: 0.9rem;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .time {
+    margin-bottom: 0.3rem;
+    font-size: 0.85rem;
+  }
+}
+
+p {
+  color: #4f4f4f;
+  font-family: sans-serif;
+  line-height: 1.5;
+  margin-top: 0.4rem;
+}
+
+@media screen and (max-width: 600px) {
+  p {
+    font-size: 0.9rem;
+  }
+}

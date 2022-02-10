@@ -24,11 +24,8 @@ export default function SinglePost() {
                 comment: 9,
               }}
             />
-            
           </div>
-          
         </div>
-        
         <div className="dummy"><Comments /></div>
       </div>
     </>
