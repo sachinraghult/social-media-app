@@ -6,6 +6,10 @@ const CommentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
     post: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Post",
@@ -14,10 +18,10 @@ const CommentSchema = new mongoose.Schema(
       type: [mongoose.Schema.Types.ObjectId],
       ref: "User",
     },
-    replies: {
-      type: [mongoose.Schema.Types.ObjectId],
+    parent: {
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Comment",
-    },
+    }
   },
   { timestamps: true }
 );

@@ -5,6 +5,7 @@ const cors = require("cors");
 const auth = require("./routes/auth");
 const post = require("./routes/post");
 const user = require("./routes/user");
+const comment = require("./routes/comment");
 
 const app = express();
 
@@ -21,6 +22,7 @@ mongoose
 app.use("/api/auth", auth);
 app.use("/api/post", post);
 app.use("/api/user", user);
+app.use("/api/comment", comment);
 
 app.get("/", (req, res) => res.send("hello world"));
 
