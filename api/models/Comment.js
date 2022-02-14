@@ -21,7 +21,7 @@ const CommentSchema = new mongoose.Schema(
     parent: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Comment",
-    }
+    },
   },
   { timestamps: true }
 );
