@@ -2,6 +2,7 @@ const router = require("express").Router();
 const User = require("../models/User");
 const Post = require("../models/Post");
 const verify = require("../middleware/verify");
+const Comment = require("../models/Comment");
 
 //CREATE
 router.post("/", verify, async (req, res) => {
@@ -15,7 +16,7 @@ router.post("/", verify, async (req, res) => {
     const savedPost = await newPost.save();
     res.status(200).json(savedPost);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("Cannot create post");
   }
 });
 
@@ -37,7 +38,41 @@ router.put("/:id", verify, async (req, res) => {
 
     res.status(200).json(updatedPost);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("Cannot update post");
+  }
+});
+
+//ADD OR REMOVE LIKES
+router.put("/like/:id", verify, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json("Access Denied!");
+
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json("Post not found!");
+
+    var updatedPost;
+    if (post.likes.includes(user._id)) {
+      updatedPost = await Post.findByIdAndUpdate(
+        req.params.id,
+        {
+          $pull: { likes: user._id },
+        },
+        { new: true }
+      );
+    } else {
+      updatedPost = await Post.findByIdAndUpdate(
+        req.params.id,
+        {
+          $push: { likes: user._id },
+        },
+        { new: true }
+      );
+    }
+
+    res.status(200).json(updatedPost);
+  } catch (err) {
+    res.status(500).json("Cannot update");
   }
 });
 
@@ -50,10 +85,11 @@ router.delete("/:id", verify, async (req, res) => {
     if (post.userId.toString() !== req.user._id)
       return res.status(401).json("Access Denied!");
 
+    await Comment.deleteMany({ post: post._id });
     await post.delete();
     res.status(200).json("Post has been deleted!");
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("Cannot delete post");
   }
 });
 
@@ -66,11 +102,11 @@ router.get("/:id", verify, async (req, res) => {
     );
     res.status(200).json(post._doc);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("Cannot get a post");
   }
 });
 
-//GET ALL POST
+//GET ALL POSTS / USER POSTS / FEED POSTS
 router.get("/", verify, async (req, res) => {
   const userName = req.query.user;
   const feed = req.query.feed;
@@ -99,7 +135,7 @@ router.get("/", verify, async (req, res) => {
 
     res.status(200).json(posts);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("Cannot get posts");
   }
 });
 

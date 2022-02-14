@@ -2,6 +2,8 @@ const router = require("express").Router();
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const verify = require("../middleware/verify");
+const Post = require("../models/Post");
+const Comment = require("../models/Comment");
 
 //UPDATE
 router.put("/update", verify, async (req, res) => {
@@ -24,7 +26,7 @@ router.put("/update", verify, async (req, res) => {
     const { password, ...others } = updatedUser._doc;
     res.status(200).json(others);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("Cannot update user");
   }
 });
 
@@ -58,7 +60,7 @@ router.put("/follow", verify, async (req, res) => {
     const { password, ...others } = updatedFrom._doc;
     res.status(200).json(others);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("Cannot add follower");
   }
 });
 
@@ -92,7 +94,7 @@ router.put("/unfollow", verify, async (req, res) => {
     const { password, ...others } = updatedFrom._doc;
     res.status(200).json(others);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("Cannot remove follower");
   }
 });
 
@@ -102,10 +104,23 @@ router.delete("/", verify, async (req, res) => {
     const user = await User.findById(req.user._id);
     if (!user) return res.status(404).json("Access Denied!");
 
-    await user.delete();
+    const posts = await Post.find({ userId: user._id });
+
+    await Promise.all(
+      posts.map(async (post) => {
+        const log = await Comment.find({ post: post._id });
+
+        console.log(log);
+        //await Comment.deleteMany({ post: post._id });
+        //await post.delete();
+        console.log("xyz", post);
+      })
+    );
+
+    //await user.delete();
     res.status(200).json("User has been deleted...");
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("Cannot delete user");
   }
 });
 
@@ -121,7 +136,7 @@ router.get("/", verify, async (req, res) => {
     const { password, ...others } = user._doc;
     res.status(200).json(others);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("Cannot get user");
   }
 });
 
