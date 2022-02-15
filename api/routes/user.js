@@ -104,20 +104,10 @@ router.delete("/", verify, async (req, res) => {
     const user = await User.findById(req.user._id);
     if (!user) return res.status(404).json("Access Denied!");
 
-    const posts = await Post.find({ userId: user._id });
+    await Comment.deleteMany({ user: user._id });
+    await Post.deleteMany({ userId: user._id });
 
-    await Promise.all(
-      posts.map(async (post) => {
-        const log = await Comment.find({ post: post._id });
-
-        console.log(log);
-        //await Comment.deleteMany({ post: post._id });
-        //await post.delete();
-        console.log("xyz", post);
-      })
-    );
-
-    //await user.delete();
+    await user.delete();
     res.status(200).json("User has been deleted...");
   } catch (err) {
     res.status(500).json("Cannot delete user");

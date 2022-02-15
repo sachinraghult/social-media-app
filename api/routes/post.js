@@ -116,9 +116,9 @@ router.get("/", verify, async (req, res) => {
     if (feed === "true") {
       const user = await User.findById(req.user._id);
       posts = await Post.find({
-        userId: { $in: user.followers },
+        userId: { $in: user.following },
       })
-        .sort({ timestamps: -1 })
+        .sort({ createdAt: -1 })
         .populate("userId", "name username _id profilePic");
     } else if (userName) {
       const user = await User.findOne({ username: userName });
