@@ -133,7 +133,14 @@ router.get("/", verify, async (req, res) => {
       );
     }
 
-    res.status(200).json(posts);
+    var response = [];
+    await Promise.all(
+      posts.map(async (post) => {
+        var comments = await Comment.find({post: post._id});
+        response.push({...post._doc, size : comments.length});
+    }));
+
+    res.status(200).json(response);
   } catch (err) {
     res.status(500).json("Cannot get posts");
   }

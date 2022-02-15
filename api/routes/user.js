@@ -30,7 +30,7 @@ router.put("/update", verify, async (req, res) => {
   }
 });
 
-//FOLLOW
+//ADD FOLLOWER
 router.put("/follow", verify, async (req, res) => {
   try {
     const from = await User.findById(req.user._id);
@@ -139,10 +139,46 @@ router.delete("/", verify, async (req, res) => {
     if (!user) return res.status(404).json("Access Denied!");
 
     // Cannot delete the comments of the owner and the other users
-    console.log("comment ", await Comment.find({ user: user._id }));
     
+    const posts = await Post.find({ userId: user._id });
+    
+    await Promise.all(
+      posts.map(async (post) => {
+        await Comment.deleteMany({post: post._id});
+      })
+    )
+    await Post.deleteMany({ userId: user._id })
 
-    //await user.delete();
+    await User.updateMany(
+      {followers: user._id},
+      {
+        $pull: {followers: user._id}
+      }
+    );
+
+    await User.updateMany(
+      {following: user._id},
+      {
+        $pull: {following: user._id}
+      }
+    );
+
+    await Post.updateMany(
+      {likes: user._id},
+      {
+        $pull: {likes: user._id}
+      }
+    );
+
+    await Comment.updateMany(
+      {likes: user._id},
+      {
+        $pull: {likes: user._id}
+      }
+    );
+
+
+    await user.delete();
     res.status(200).json("User has been deleted...");
   } catch (err) {
     res.status(500).json("Cannot delete user");

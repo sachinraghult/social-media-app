@@ -130,13 +130,34 @@ router.delete("/:id", verify, async (req, res) => {
   }
 });
 
-//GET COMMENT
-router.get("/", verify, async (req, res) => {
+//GET COMMENTS
+router.get("/:id", verify, async (req, res) => {
   try {
-    res.status(200).json(others);
+    const comments = await Comment.find({post: req.params.id, parent: null});
+
+    var response = [];
+    await Promise.all(
+      comments.map(async (comment) => {
+        var replies = await Comment.find({parent: comment._id});
+        response.push({...comment._doc, size : replies.length});
+    }));
+
+    res.status(200).json(response);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("Cannot get comment");
   }
 });
+
+//GET REPLIES
+router.get("/replies/:id", verify, async (req, res) => {
+  try {
+    const replies = await Comment.find({parent: req.params.id});
+
+    res.status(200).json(replies);
+  } catch (err) {
+    res.status(500).json("Cannot get comment");
+  }
+});
+
 
 module.exports = router;
