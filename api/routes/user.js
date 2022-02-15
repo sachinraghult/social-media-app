@@ -64,7 +64,7 @@ router.put("/follow", verify, async (req, res) => {
   }
 });
 
-//REMOVE FOLLOWER
+//UNFOLLOW
 router.put("/unfollow", verify, async (req, res) => {
   try {
     const from = await User.findById(req.user._id);
@@ -94,7 +94,41 @@ router.put("/unfollow", verify, async (req, res) => {
     const { password, ...others } = updatedFrom._doc;
     res.status(200).json(others);
   } catch (err) {
-    res.status(500).json("Cannot remove follower");
+    res.status(500).json("Cannot unfollow");
+  }
+});
+
+//BLOCK
+router.put("/block", verify, async (req, res) => {
+  try {
+    const from = await User.findById(req.user._id);
+    if (!from) return res.status(404).json("Access Denied!");
+
+    let to = await User.findById(req.query.followers);
+    if (!to) return res.status(404).json("User not found!");
+
+    if (!to.followers.includes(from._id))
+      return res.status(404).json("Follower not found!");
+
+    const updatedFrom = await User.findByIdAndUpdate(
+      from._id,
+      {
+        $pull: { followers: to._id },
+      },
+      { new: true }
+    );
+    const updatedTo = await User.findByIdAndUpdate(
+      to._id,
+      {
+        $pull: { following: from._id },
+      },
+      { new: true }
+    );
+
+    const { password, ...others } = updatedFrom._doc;
+    res.status(200).json(others);
+  } catch (err) {
+    res.status(500).json("Cannot block follower");
   }
 });
 
