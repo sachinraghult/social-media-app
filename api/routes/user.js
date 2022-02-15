@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const verify = require("../middleware/verify");
 const Post = require("../models/Post");
 const Comment = require("../models/Comment");
+const axios = require("axios");
 
 //UPDATE
 router.put("/update", verify, async (req, res) => {
@@ -58,6 +59,16 @@ router.put("/follow", verify, async (req, res) => {
     );
 
     const { password, ...others } = updatedFrom._doc;
+
+    try {
+      await axios.post("http://localhost:5000/api/timeline", 
+        { to : req.query.followers },
+        { headers: {authorization : req.header("authorization") } }
+      );
+    } catch (err) {
+      res.status(401).json("Cannot insert timeline");
+    }
+    
     res.status(200).json(others);
   } catch (err) {
     res.status(500).json("Cannot add follower");
@@ -92,6 +103,7 @@ router.put("/unfollow", verify, async (req, res) => {
     );
 
     const { password, ...others } = updatedFrom._doc;
+    
     res.status(200).json(others);
   } catch (err) {
     res.status(500).json("Cannot unfollow");

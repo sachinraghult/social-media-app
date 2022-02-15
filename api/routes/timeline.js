@@ -3,139 +3,38 @@ const Comment = require("../models/Comment");
 const User = require("../models/User");
 const Post = require("../models/Post");
 const verify = require("../middleware/verify");
+const Timeline = require("../models/Timeline");
 
-//ADD COMMENT
+//INSERT TIMELINE
 router.post("/", verify, async (req, res) => {
   try {
-    const user = await User.findById(req.user._id);
-    if (!user) return res.status(404).json("Access Denied!");
+    const timelineData = { ...req.body, from: req.user._id };
+    const newTimeline = new Timeline(timelineData);
 
-    try {
-      const post = await Post.findById(req.body.post);
+    const timeline = await newTimeline.save();
 
-      var newComment;
-      if (req.body.parentId.toString() !== "") {
-        const parentComment = await Comment.findById(req.body.parentId);
-
-        if (typeof parentComment.parent === "undefined") {
-          newComment = new Comment({
-            comment: req.body.comment,
-            user: req.user._id,
-            post: req.body.post,
-            parent: req.body.parentId,
-          });
-        } else {
-          return res.status(401).json("Connot comment to a reply");
-        }
-      } else {
-        newComment = new Comment({
-          comment: req.body.comment,
-          user: req.user._id,
-          post: req.body.post,
-        });
-      }
-
-      const comment = await newComment.save();
-
-      res.status(200).json(comment);
-    } catch (err) {
-      res.status(404).json("Post not found!");
-    }
+    res.status(200).json(timeline);
   } catch (err) {
-    res.status(500).json("Cannot create comment");
+    res.status(500).json("Cannot insert timeline");
   }
 });
 
-//UPDATE
-router.put("/:id", verify, async (req, res) => {
-  try {
-    const user = await User.findById(req.user._id);
-    if (!user) return res.status(404).json("Access Denied!");
-
-    const comment = await Comment.findById(req.params.id);
-    if (!comment) return res.status(404).json("Comment not found!");
-
-    if (comment.user.toString() !== req.user._id)
-      return res.status(401).json("Access Denied!");
-
-    const updatedComment = await Comment.findByIdAndUpdate(
-      req.params.id,
-      {
-        comment: req.body.comment,
-      },
-      { new: true }
-    );
-
-    res.status(200).json(updatedComment);
-  } catch (err) {
-    res.status(500).json("Cannot update comment");
-  }
-});
-
-//ADD OR REMOVE LIKES
-router.put("/like/:id", verify, async (req, res) => {
-  try {
-    const user = await User.findById(req.user._id);
-    if (!user) return res.status(404).json("Access Denied!");
-
-    const comment = await Comment.findById(req.params.id);
-    if (!comment) return res.status(404).json("Comment not found!");
-
-    var updatedComment;
-    if (comment.likes.includes(user._id)) {
-      updatedComment = await Comment.findByIdAndUpdate(
-        req.params.id,
-        {
-          $pull: { likes: user._id },
-        },
-        { new: true }
-      );
-    } else {
-      updatedComment = await Comment.findByIdAndUpdate(
-        req.params.id,
-        {
-          $push: { likes: user._id },
-        },
-        { new: true }
-      );
-    }
-
-    res.status(200).json(updatedComment);
-  } catch (err) {
-    res.status(500).json("Cannot update");
-  }
-});
-
-// DELETE
-router.delete("/:id", verify, async (req, res) => {
-  try {
-    const user = await User.findById(req.user._id);
-    if (!user) return res.status(404).json("Access Denied!");
-
-    const comment = await Comment.findById(req.params.id);
-    if (!comment) return res.status(404).json("Comment not found!");
-
-    if (comment.user.toString() !== req.user._id)
-      return res.status(401).json("Access Denied!");
-
-    await Comment.deleteMany({ parent: comment._id }).catch((err) =>
-      res.status(404).json("Cannot find any reply")
-    );
-
-    await comment.delete();
-
-    res.status(200).json("Comment has been deleted...");
-  } catch (err) {
-    res.status(500).json("Cannot delete comment");
-  }
-});
-
-//GET COMMENT
+//GET TIMELINE
 router.get("/", verify, async (req, res) => {
   try {
-    res.status(200).json(others);
+    const ref = await Timeline.find({ from : req.user._id }).limit(1).sort({$natural:-1});
+    if (!ref) return res.status(404).json("Timeline not found!");
+
+    var d = new Date(ref[0].createdAt);
+    d.setDate(d.getDate()+1);
+    var s = new Date(ref[0].createdAt);
+    s.setDate(s.getDate()-1);
+    
+    const timeline = await Timeline.find( {createdAt:{$gt: (s.toISOString()),$lt:(d.toISOString())}} ).sort({ createdAt: -1 });
+
+    res.status(200).json(timeline);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("Cannot get timeline");
   }
 });
 

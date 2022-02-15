@@ -3,6 +3,7 @@ const Comment = require("../models/Comment");
 const User = require("../models/User");
 const Post = require("../models/Post");
 const verify = require("../middleware/verify");
+const axios = require("axios");
 
 //ADD COMMENT
 router.post("/", verify, async (req, res) => {
@@ -36,6 +37,15 @@ router.post("/", verify, async (req, res) => {
       }
 
       const comment = await newComment.save();
+
+      try {
+        await axios.post("http://localhost:5000/api/timeline", 
+          { to : comment.user, post: comment.post, comment: comment._id },
+          { headers: {authorization : req.header("authorization") } }
+        );
+      } catch (err) {
+        res.status(401).json("Cannot insert timeline");
+      }
 
       res.status(200).json(comment);
     } catch (err) {

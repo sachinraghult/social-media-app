@@ -6,6 +6,7 @@ const auth = require("./routes/auth");
 const post = require("./routes/post");
 const user = require("./routes/user");
 const comment = require("./routes/comment");
+const timeline = require("./routes/timeline");
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use("/api/auth", auth);
 app.use("/api/post", post);
 app.use("/api/user", user);
 app.use("/api/comment", comment);
+app.use("/api/timeline", timeline);
 
 app.get("/", (req, res) => res.send("hello world"));
 
