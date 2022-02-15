@@ -26,7 +26,7 @@ router.get("/", verify, async (req, res) => {
     if (!ref) return res.status(404).json("Timeline not found!");
 
     var d = new Date(ref[0].createdAt);
-    d.setDate(d.getDate()+1);
+    d.setMinutes(d.getMinutes()+1);
     var s = new Date(ref[0].createdAt);
     s.setDate(s.getDate()-1);
     
