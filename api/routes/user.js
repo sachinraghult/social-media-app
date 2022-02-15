@@ -107,7 +107,7 @@ router.put("/block", verify, async (req, res) => {
     let to = await User.findById(req.query.followers);
     if (!to) return res.status(404).json("User not found!");
 
-    if (!to.followers.includes(from._id))
+    if (!to.following.includes(from._id))
       return res.status(404).json("Follower not found!");
 
     const updatedFrom = await User.findByIdAndUpdate(
@@ -138,10 +138,11 @@ router.delete("/", verify, async (req, res) => {
     const user = await User.findById(req.user._id);
     if (!user) return res.status(404).json("Access Denied!");
 
-    await Comment.deleteMany({ user: user._id });
-    await Post.deleteMany({ userId: user._id });
+    // Cannot delete the comments of the owner and the other users
+    console.log("comment ", await Comment.find({ user: user._id }));
+    
 
-    await user.delete();
+    //await user.delete();
     res.status(200).json("User has been deleted...");
   } catch (err) {
     res.status(500).json("Cannot delete user");
