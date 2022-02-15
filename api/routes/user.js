@@ -107,7 +107,7 @@ router.put("/block", verify, async (req, res) => {
     let to = await User.findById(req.query.followers);
     if (!to) return res.status(404).json("User not found!");
 
-    if (!to.followers.includes(from._id))
+    if (!to.following.includes(from._id))
       return res.status(404).json("Follower not found!");
 
     const updatedFrom = await User.findByIdAndUpdate(
