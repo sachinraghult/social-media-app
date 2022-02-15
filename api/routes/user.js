@@ -30,7 +30,7 @@ router.put("/update", verify, async (req, res) => {
   }
 });
 
-//ADD FOLLOWER
+//FOLLOW
 router.put("/follow", verify, async (req, res) => {
   try {
     const from = await User.findById(req.user._id);
