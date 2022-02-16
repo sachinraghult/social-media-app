@@ -1,5 +1,5 @@
 import "./post.css";
-import { MoreVert } from "@material-ui/icons";
+import { MoreVert, Bookmark, BookmarkBorder } from "@material-ui/icons";
 import { Users } from "../../dummyData";
 import { useState } from "react";
 
@@ -11,6 +11,9 @@ export default function Post({ post }) {
     setLike(isLiked ? like-1 : like+1)
     setIsLiked(!isLiked)
   }
+
+  const bookmarked = true;
+
   return (
     <div className="post">
       <div className="postWrapper">
@@ -27,6 +30,7 @@ export default function Post({ post }) {
             <span className="postDate">{post.date}</span>
           </div>
           <div className="postTopRight">
+            {bookmarked ? <Bookmark /> : <BookmarkBorder /> }
             <MoreVert />
           </div>
         </div>

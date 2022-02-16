@@ -45,6 +45,10 @@ const UserSchema = new mongoose.Schema(
       type: [mongoose.Schema.Types.ObjectId],
       ref: "User",
     },
+    status: {
+      type: String,
+      default: "Hi! I am using Lamasocial",
+    },
   },
   { timestamps: true }
 );
