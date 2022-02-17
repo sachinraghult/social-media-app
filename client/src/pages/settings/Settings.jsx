@@ -1,5 +1,4 @@
-import "./profile.css";
-import {Link} from 'react-router-dom'
+import "./Settings.css";
 import Topbar from "../../components/topbar/Topbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Feed from "../../components/feed/Feed";
@@ -46,11 +45,11 @@ export default function Profile() {
               className="shareButton"
               style={{ float: "right" }}
             >
-              <Link className="link" to='/settings'>Edit</Link>
+              Edit
             </button>
 
             <div className="profileInfo">
-              <h4 className="profileInfoName">Safak Kocaoglu</h4>
+              <h4 className="profileInfoName">Edit Kocaoglu</h4>
               <span className="profileInfoDesc">Hello my friends!</span>
             </div>
           </div>
