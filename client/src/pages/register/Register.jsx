@@ -13,6 +13,7 @@ export default function Register() {
   const [confirmPwd, setConfirmPwd] = useState("");
   const [error, setError] = useState(false);
   const [pwdError, setPwdError] = useState(false);
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();

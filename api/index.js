@@ -13,7 +13,11 @@ const app = express();
 //middleware
 dotenv.config();
 app.use(express.json());
-app.use(cors());
+
+const corsOptions = {
+  exposedHeaders: 'authorization',
+};
+app.use(cors(corsOptions));
 
 mongoose
   .connect(process.env.MONGO_URL)

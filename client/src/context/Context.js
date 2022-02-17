@@ -1,5 +1,5 @@
 import { createContext, useEffect, useReducer } from "react";
-import axios from "axios";
+import axios from "../axios";
 import Reducer from "./Reducer";
 
 const INIT_STATE = {
@@ -22,7 +22,7 @@ export const ContextProvider = ({ children }) => {
         });
         dispatch({
           type: "LOGIN_SUCCESS",
-          payload: { ...res.data, authorization: state.authToken },
+          payload: { ...res.data, authToken: state.authToken },
         });
       } catch (err) {
         dispatch({ type: "LOGOUT" });
@@ -39,8 +39,10 @@ export const ContextProvider = ({ children }) => {
   useEffect(() => {
     if (state.authToken)
       localStorage.setItem("authorization", JSON.stringify(state.authToken));
-    else 
-        localStorage.setItem("authorization", null);
+    else  {
+      localStorage.setItem("authorization", null);
+    }
+        
   }, [state.authToken]);
 
   return (

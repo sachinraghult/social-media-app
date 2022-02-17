@@ -6,9 +6,13 @@ import Profile from "./pages/profile/Profile";
 import Register from "./pages/register/Register";
 import Settings from "./pages/settings/Settings";
 import SinglePost from "./pages/singlePost/SinglePost";
+import React, { useContext } from "react";
+import { Context } from "./context/Context";
 
 function App() {
-  const user = false;
+
+  const {user, authToken} = useContext(Context)
+  
   return (
     <BrowserRouter>
       <Routes>
