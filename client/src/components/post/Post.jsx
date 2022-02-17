@@ -1,29 +1,28 @@
 import "./post.css";
 import { MoreVert, Bookmark, BookmarkBorder } from "@material-ui/icons";
 import axios from "../../axios";
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom";
 import { useContext, useState } from "react";
 import { Context } from "../../context/Context";
+import { useEffect } from "react";
 
 export default function Post({ post }) {
+  const { authToken } = useContext(Context);
 
-  const {authToken} = useContext(Context);
+  const [like, setLike] = useState(0);
 
-  const [like, setLike] = useState(post?.likes.length)
+  useEffect(() => {
+    setLike(post?.likes.length);
+  }, [post]);
 
   const handleLike = async (e) => {
-
     try {
-      console.log("hello")
       const res = await axios.put("/post/like/" + post._id, post, {
-        headers: {authorization: authToken},
-      })
+        headers: { authorization: authToken },
+      });
       setLike(res.data.likes.length);
-      
-    } catch (err) {
-      
-    }
-  }
+    } catch (err) {}
+  };
 
   return (
     <div className="post">
@@ -35,13 +34,13 @@ export default function Post({ post }) {
               src={post?.userId.profilePic}
               alt=""
             />
-            <span className="postUsername">
-              {post?.userId.name}
+            <span className="postUsername">{post?.userId.name}</span>
+            <span className="postDate">
+              {new Date(post?.createdAt).toDateString()}
             </span>
-            <span className="postDate">{new Date(post.createdAt).toDateString()}</span>
           </div>
           <div className="postTopRight">
-            {true ? <Bookmark /> : <BookmarkBorder /> }
+            {true ? <Bookmark /> : <BookmarkBorder />}
             <MoreVert />
           </div>
         </div>
@@ -51,20 +50,26 @@ export default function Post({ post }) {
         </div>
         <div className="postBottom">
           <div className="postBottomLeft">
-            <img 
-            className="likeIcon" 
-            src="assets/like.png" 
-            onClick={handleLike}
-            alt="" />
-            <img 
-            className="likeIcon" 
-            src="assets/heart.png" 
-            onClick={handleLike}
-            alt="" />
+            <img
+              className="likeIcon"
+              src="assets/like.png"
+              onClick={handleLike}
+              alt=""
+            />
+            <img
+              className="likeIcon"
+              src="assets/heart.png"
+              onClick={handleLike}
+              alt=""
+            />
             <span className="postLikeCounter">{like} people liked it</span>
           </div>
           <div className="postBottomRight">
-            <span className="postCommentText"><Link className="link" to={`/post/${post._id}`}>{post?.size} comments</Link></span>
+            <span className="postCommentText">
+              <Link className="link" to={`/post/${post?._id}`}>
+                {post?.size} comments
+              </Link>
+            </span>
           </div>
         </div>
       </div>

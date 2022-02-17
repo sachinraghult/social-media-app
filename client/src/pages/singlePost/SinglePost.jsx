@@ -3,8 +3,35 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import "./SinglePost.css";
 import Post from "../../components/post/Post";
 import Comments from "../../components/comments/Comments";
+import axios from "../../axios";
+import { useContext } from "react";
+import { useEffect } from "react";
+import { Context } from "../../context/Context";
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
 
 export default function SinglePost() {
+  const location = useLocation();
+  const path = location.pathname.split("/")[2];
+
+  const { user, authToken } = useContext(Context);
+
+  const [post, setPost] = useState();
+
+  useEffect(() => {
+    const getPost = async () => {
+      try {
+        const res = await axios.get("/post/" + path, {
+          headers: { authorization: authToken },
+        });
+
+        setPost(res.data);
+      } catch (err) {}
+    };
+
+    getPost();
+  }, []);
+
   return (
     <>
       <Topbar />
@@ -12,23 +39,13 @@ export default function SinglePost() {
         <Sidebar />
         <div className="SinglePostMainContainer">
           <div className="SinglePostContainer">
-            <Post
-              key={1}
-              post={{
-                id: 1,
-                desc: "Love For All, Hatred For None.",
-                photo: "assets/post/1.jpeg",
-                date: "5 mins ago",
-                userId: 1,
-                like: 32,
-                comment: 9,
-              }}
-            />
+            {post && <Post post={post} />}
           </div>
         </div>
-        <div className="dummy"><Comments /></div>
+        <div className="dummy">
+          <Comments />
+        </div>
       </div>
     </>
   );
 }
-

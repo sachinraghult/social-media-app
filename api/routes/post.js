@@ -110,7 +110,11 @@ router.get("/:id", verify, async (req, res) => {
       "userId",
       "name username _id profilePic"
     );
-    res.status(200).json(post._doc);
+
+    var comments = await Comment.find({post: post._id});
+    const response = {...post._doc, size : comments.length};
+  
+    res.status(200).json(response);
   } catch (err) {
     res.status(500).json("Cannot get a post");
   }
