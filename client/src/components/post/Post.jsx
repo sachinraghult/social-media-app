@@ -52,13 +52,14 @@ export default function Post({ post }) {
           <div className="postBottomLeft">
             <img
               className="likeIcon"
-              src="assets/like.png"
+              src="/assets/like.png"
               onClick={handleLike}
               alt=""
+              referrerPolicy="no-referrer"
             />
             <img
               className="likeIcon"
-              src="assets/heart.png"
+              src="/assets/heart.png"
               onClick={handleLike}
               alt=""
             />

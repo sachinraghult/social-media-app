@@ -14,7 +14,7 @@ export default function SinglePost() {
   const location = useLocation();
   const path = location.pathname.split("/")[2];
 
-  const { user, authToken } = useContext(Context);
+  const { authToken } = useContext(Context);
 
   const [post, setPost] = useState();
 
