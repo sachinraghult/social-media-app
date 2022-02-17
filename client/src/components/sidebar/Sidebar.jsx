@@ -1,3 +1,4 @@
+import React, { useContext } from 'react';
 import {Link} from "react-router-dom";
 import "./sidebar.css";
 import {
@@ -10,9 +11,19 @@ import {
   Event,
 } from "@material-ui/icons";
 import { Users } from "../../dummyData";
+import { Context } from '../../context/Context';
+import { Logout } from "../../context/Actions"
 import CloseFriend from "../closeFriend/CloseFriend";
 
 export default function Sidebar() {
+
+  const {user, dispatch} = useContext(Context);
+
+  const handleSubmit = async (e) => {
+    dispatch(Logout());
+  }
+
+
   return (
     <div className="sidebar">
       <div className="sidebarWrapper">
@@ -54,15 +65,15 @@ export default function Sidebar() {
 
           <Link to="#" className="link">
           <li className="sidebarListItem">
-            <Group className="sidebarIcon" />
-            <span className="sidebarListItemText">Groups</span>
+            <Bookmark className="sidebarIcon" />
+            <span className="sidebarListItemText">Bookmarks</span>
           </li>
           </Link>
 
-          <Link to="#" className="link">
+          <Link to="#" className="link" onClick={handleSubmit}>
           <li className="sidebarListItem">
-            <Bookmark className="sidebarIcon" />
-            <span className="sidebarListItemText">Bookmarks</span>
+            <Group className="sidebarIcon" />
+            <span className="sidebarListItemText">Logout</span>
           </li>
           </Link>
     

@@ -1,8 +1,18 @@
+import React, { useContext } from 'react';
 import {Link} from 'react-router-dom'
 import "./topbar.css";
+import { Context } from '../../context/Context';
+import { Logout } from "../../context/Actions"
 import { Search, Person, Chat, Notifications } from "@material-ui/icons";
 
 export default function Topbar() {
+
+  const {user, dispatch} = useContext(Context);
+
+  const handleSubmit = async (e) => {
+    dispatch(Logout());
+  }
+
   return (
     <div className="topbarContainer">
       <div className="topbarLeft">
@@ -20,10 +30,10 @@ export default function Topbar() {
       <div className="topbarRight">
         <div className="topbarLinks">
           <span className="topbarLink">
-          <Link className="link" to='/'>Homepage</Link>
-          </span>
-          <span className="topbarLink">
           <Link className="link" to='/timeline'>Timeline</Link>
+          </span>
+          <span className="topbarLink" onClick={handleSubmit}>
+          Logout
           </span>
         </div>
         <div className="topbarIcons">
@@ -45,7 +55,12 @@ export default function Topbar() {
           </div>
         </div>
         <Link className="link" to='/profile'>
-        <img src="/assets/person/1.jpeg" alt="" className="topbarImg"/>
+        <img 
+        src={user.profilePic} 
+        alt="" 
+        className="topbarImg"
+        referrerPolicy="no-referrer"
+        />
         </Link>
       </div>
     </div>

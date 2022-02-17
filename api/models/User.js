@@ -31,11 +31,11 @@ const UserSchema = new mongoose.Schema(
     },
     profilePic: {
       type: String,
-      default: "",
+      default: "https://isobarscience.com/wp-content/uploads/2020/09/default-profile-picture1.jpg",
     },
     coverPic: {
       type: String,
-      default: "",
+      default: "https://phpqna.com/wp-content/uploads/2019/08/default-cover.jpg",
     },
     followers: {
       type: [mongoose.Schema.Types.ObjectId],
