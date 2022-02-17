@@ -143,7 +143,10 @@ router.delete("/:id", verify, async (req, res) => {
 //GET COMMENTS
 router.get("/:id", verify, async (req, res) => {
   try {
-    const comments = await Comment.find({post: req.params.id, parent: null});
+    const comments = await Comment.find({post: req.params.id, parent: null}).populate(
+      "user",
+      "name username _id profilePic"
+    );
 
     var response = [];
     await Promise.all(
