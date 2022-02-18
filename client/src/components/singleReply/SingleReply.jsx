@@ -69,6 +69,7 @@ function SingleReply({ reply, recievedRepliesState }) {
               style={{ marginLeft: "20px" }}
               defaultValue={reply.comment}
               className="writeInput"
+              autoFocus={true}
               onChange={(e) => setEditedReply(e.target.value)}
             />
           )}

@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { Context } from "../../context/Context";
 import { useState } from "react";
 
-export default function Share({recievedPostsState}) {
+export default function Share({recievedPostState}) {
   const { user, authToken } = useContext(Context);
 
   const [desc, setDesc] = useState();
@@ -39,8 +39,11 @@ export default function Share({recievedPostsState}) {
         headers: { authorization: authToken },
       });
       
-      recievedPostsState(post);
+      post.data.size = 0;
+      recievedPostState(post);
+
       setDisable(false);
+
       e.target.reset();
       setFile(null);
     } catch (err) {

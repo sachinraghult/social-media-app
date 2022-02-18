@@ -37,8 +37,8 @@ router.put("/:id", verify, async (req, res) => {
         $set: req.body,
       },
       { new: true }
-    );
-
+    ).populate("userId", "name username _id profilePic");
+    
     res.status(200).json(updatedPost);
   } catch (err) {
     res.status(500).json("Cannot update post");

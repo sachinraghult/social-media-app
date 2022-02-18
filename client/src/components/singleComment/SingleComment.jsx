@@ -130,6 +130,7 @@ function SingleComment({ comment, recievedCommentsState }) {
                   style={{ marginLeft: "20px" }}
                   defaultValue={comment.comment}
                   className="writeInput"
+                  autoFocus={true}
                   onChange={(e) => setEditedComment(e.target.value)}
                 />
               )}
