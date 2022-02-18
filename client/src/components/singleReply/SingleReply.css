@@ -193,3 +193,13 @@
   vertical-align: middle;
   border-radius: 2px;
 }
+
+.editBtn {
+  border: none;
+  background-color: inherit;
+  cursor: pointer;
+}
+
+.editBtn:focus {
+  outline: none;
+}

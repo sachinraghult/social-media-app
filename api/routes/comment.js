@@ -77,7 +77,7 @@ router.put("/:id", verify, async (req, res) => {
         edited: true,
       },
       { new: true }
-    );
+    ).populate("user", "name username _id profilePic");
 
     res.status(200).json(updatedComment);
   } catch (err) {

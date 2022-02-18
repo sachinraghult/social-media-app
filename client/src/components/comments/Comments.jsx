@@ -17,11 +17,19 @@ function Comments() {
   const [main, setMain] = useState([]);
   const [desc, setDesc] = useState("");
 
-  const sendCommentsState = (id) => {
-    var filteredComments = main.filter(
-      (comment) => comment._id.toString() !== id.toString()
-    );
-    setMain(filteredComments);
+  const sendCommentsState = (id, action) => {
+    if (action.type === "edit") {
+      var index = main.findIndex((m) => m._id.toString() === id.toString());
+
+      var editedComments = main;
+      editedComments[index] = action.res.data;
+      setMain([...editedComments]);
+    } else if (action.type === "delete") {
+      var filteredComments = main.filter(
+        (comment) => comment._id.toString() !== id.toString()
+      );
+      setMain(filteredComments);
+    }
   };
 
   useEffect(() => {
@@ -69,6 +77,7 @@ function Comments() {
           </div>
         </div>
 
+        {/*comment box*/}
         <div className="body_comment">
           <form className="row" onSubmit={handleSubmit}>
             <div className="box_comment col-md-11">
@@ -92,6 +101,7 @@ function Comments() {
             </div>
           </form>
 
+          {/*single comments */}
           {main.map((comment) => (
             <SingleComment
               key={comment._id}

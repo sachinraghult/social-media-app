@@ -197,6 +197,7 @@
 .writeInput {
   font-size: 14px;
   border: none;
+  width: 90%;
 }
 
 .writeInput::placeholder {
@@ -212,4 +213,21 @@
   border: none;
   background-color: inherit;
   cursor: pointer;
+}
+
+.editBtn:focus {
+  outline: none;
+}
+
+.displayComment {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.displayComment:hover {
+  overflow: visible;
+  display: block;
 }

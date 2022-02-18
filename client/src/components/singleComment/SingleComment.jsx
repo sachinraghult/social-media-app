@@ -7,6 +7,7 @@ import { Context } from "../../context/Context";
 import SingleReply from "../singleReply/SingleReply";
 
 function SingleComment({ comment, recievedCommentsState }) {
+
   const location = useLocation();
   const path = location.pathname.split("/")[2];
 
@@ -18,12 +19,21 @@ function SingleComment({ comment, recievedCommentsState }) {
   const [replies, setReplies] = useState([]);
   const [desc, setDesc] = useState("");
   const [edit, setEdit] = useState(false);
+  const [editedComment, setEditedComment] = useState(comment.comment);
 
-  const sendRepliesState = (id) => {
-    var filteredReplies = replies.filter(
-      (reply) => reply._id.toString() !== id.toString()
-    );
-    setReplies(filteredReplies);
+  const sendRepliesState = (id, action) => {
+    if (action.type === "edit") {
+      var index = replies.findIndex((m) => m._id.toString() === id.toString());
+
+      var editedReplies = replies;
+      editedReplies[index] = action.res.data;
+      setReplies([...editedReplies]);
+    } else if (action.type === "delete") {
+      var filteredReplies = replies.filter(
+        (replies) => replies._id.toString() !== id.toString()
+      );
+      setReplies(filteredReplies);
+    }
   };
 
   useEffect(() => {
@@ -52,16 +62,26 @@ function SingleComment({ comment, recievedCommentsState }) {
     } catch (err) {}
   };
 
-  const handleEdit = () => {
+  const handleEdit = async (e) => {
+    e.preventDefault();
     setEdit(true);
+
+    try {
+      const res = await axios.put("/comment/" + comment._id, {comment: editedComment}, {
+        headers: { authorization: authToken },
+      });
+
+      recievedCommentsState(comment._id, {type: "edit", res: res});
+      setEdit(false);
+    } catch (err) {}
   };
 
   const handleDelete = async () => {
     try {
-      await axios.delete("/comment/" + comment._id, {
+      const res = await axios.delete("/comment/" + comment._id, {
         headers: { authorization: authToken },
       });
-      recievedCommentsState(comment._id);
+      recievedCommentsState(comment._id, {type: "delete", res: res});
     } catch (err) {}
   };
 
@@ -104,12 +124,13 @@ function SingleComment({ comment, recievedCommentsState }) {
             <h4 style={{ marginLeft: "20px" }}>{comment.user.name}</h4>
             <form onSubmit={handleEdit}>
               {!edit ? (
-                <p style={{ marginLeft: "20px" }}>{comment.comment}</p>
+                <p className="displayComment" style={{ marginLeft: "20px" }}>{comment.comment}</p>
               ) : (
-                <input
+                <textarea
                   style={{ marginLeft: "20px" }}
                   placeholder={comment.comment}
                   className="writeInput"
+                  onChange={(e) => setEditedComment(e.target.value)}
                 />
               )}
 
@@ -141,7 +162,7 @@ function SingleComment({ comment, recievedCommentsState }) {
                         style={{ color: "red" }}
                         onClick={handleDelete}
                       >
-                        Delete
+                        Delete🗑️
                       </a>
                     )
                   : comment.user._id === user._id && (
@@ -150,7 +171,7 @@ function SingleComment({ comment, recievedCommentsState }) {
                         style={{ color: "red" }}
                         onClick={() => setEdit(false)}
                       >
-                        Cancel
+                        Cancel🚫
                       </a>
                     )}
                 {/*Edit */}
@@ -159,9 +180,9 @@ function SingleComment({ comment, recievedCommentsState }) {
                     <a
                       className="like pull-right"
                       style={{ color: "green", marginRight: "15px" }}
-                      onClick={handleEdit}
+                      onClick={() => setEdit(true)}
                     >
-                      Edit
+                      Edit✒️
                     </a>
                   )
                 ) : (
@@ -170,7 +191,7 @@ function SingleComment({ comment, recievedCommentsState }) {
                     className="like pull-right editBtn"
                     style={{ color: "green", marginRight: "15px" }}
                   >
-                    Edit
+                    Edit✒️
                   </button>
                 )}
               </div>
