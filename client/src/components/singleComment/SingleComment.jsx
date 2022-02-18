@@ -128,7 +128,7 @@ function SingleComment({ comment, recievedCommentsState }) {
               ) : (
                 <textarea
                   style={{ marginLeft: "20px" }}
-                  placeholder={comment.comment}
+                  defaultValue={comment.comment}
                   className="writeInput"
                   onChange={(e) => setEditedComment(e.target.value)}
                 />

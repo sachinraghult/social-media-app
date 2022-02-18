@@ -14,7 +14,9 @@ router.post("/", verify, async (req, res) => {
     const postData = { ...req.body, userId: req.user._id };
     const newPost = new Post(postData);
 
-    const savedPost = await newPost.save();
+    var savedPost = await newPost.save();
+    savedPost = await savedPost.populate("userId", "name username _id profilePic");
+
     res.status(200).json(savedPost);
   } catch (err) {
     res.status(500).json("Cannot create post");

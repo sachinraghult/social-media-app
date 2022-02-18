@@ -7,6 +7,9 @@ import { Context } from "../../context/Context";
 import { useEffect } from "react";
 
 export default function Post({ post }) {
+
+  const folder = "http://localhost:5000/images/";
+
   const { authToken } = useContext(Context);
 
   const [like, setLike] = useState(0);
@@ -46,7 +49,7 @@ export default function Post({ post }) {
         </div>
         <div className="postCenter">
           <span className="postText">{post?.desc}</span>
-          <img className="postImg" src={post?.photo} alt="" />
+          <img className="postImg" src={folder + post?.photo} alt="" />
         </div>
         <div className="postBottom">
           <div className="postBottomLeft">

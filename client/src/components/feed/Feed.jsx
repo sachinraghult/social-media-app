@@ -13,6 +13,10 @@ export default function Feed() {
 
   const [posts, setPosts] = useState([]);
 
+  const sendPostState = (res) => {
+    setPosts([res.data, ...posts]);
+  };
+
   useEffect(() => {
     const getFeed = async () => {
       try {
@@ -32,7 +36,7 @@ export default function Feed() {
   return (
     <div className="feed">
       <div className="feedWrapper">
-        <Share />
+        <Share recievedPostsState={sendPostState} />
         {posts.map((post) => (
           <Post key={post._id} post={post} />
         ))}

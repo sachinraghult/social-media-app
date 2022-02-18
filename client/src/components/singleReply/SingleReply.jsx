@@ -67,7 +67,7 @@ function SingleReply({ reply, recievedRepliesState }) {
           ) : (
             <textarea
               style={{ marginLeft: "20px" }}
-              placeholder={reply.comment}
+              defaultValue={reply.comment}
               className="writeInput"
               onChange={(e) => setEditedReply(e.target.value)}
             />
