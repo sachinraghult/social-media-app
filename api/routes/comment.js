@@ -36,12 +36,14 @@ router.post("/", verify, async (req, res) => {
         });
       }
 
-      const comment = await newComment.save();
+      var comment = await newComment.save();
+      comment = await comment.populate("user", "name username _id profilePic");
 
       try {
-        await axios.post("http://localhost:5000/api/timeline", 
-          { to : comment.user, post: comment.post, comment: comment._id },
-          { headers: {authorization : req.header("authorization") } }
+        await axios.post(
+          "http://localhost:5000/api/timeline",
+          { to: comment.user, post: comment.post, comment: comment._id },
+          { headers: { authorization: req.header("authorization") } }
         );
       } catch (err) {
         res.status(401).json("Cannot insert timeline");
@@ -72,6 +74,7 @@ router.put("/:id", verify, async (req, res) => {
       req.params.id,
       {
         comment: req.body.comment,
+        edited: true,
       },
       { new: true }
     );
@@ -143,17 +146,20 @@ router.delete("/:id", verify, async (req, res) => {
 //GET COMMENTS
 router.get("/:id", verify, async (req, res) => {
   try {
-    const comments = await Comment.find({post: req.params.id, parent: null}).populate(
-      "user",
-      "name username _id profilePic"
-    );
+    const comments = await Comment.find({
+      post: req.params.id,
+      parent: null,
+    })
+      .populate("user", "name username _id profilePic")
+      .sort({ comment: -1 });
 
     var response = [];
     await Promise.all(
       comments.map(async (comment) => {
-        var replies = await Comment.find({parent: comment._id});
-        response.push({...comment._doc, size : replies.length});
-    }));
+        var replies = await Comment.find({ parent: comment._id });
+        response.push({ ...comment._doc, size: replies.length });
+      })
+    );
 
     res.status(200).json(response);
   } catch (err) {
@@ -164,13 +170,14 @@ router.get("/:id", verify, async (req, res) => {
 //GET REPLIES
 router.get("/replies/:id", verify, async (req, res) => {
   try {
-    const replies = await Comment.find({parent: req.params.id});
+    const replies = await Comment.find({ parent: req.params.id })
+      .populate("user", "name username _id profilePic")
+      .sort({ comment: -1 });
 
     res.status(200).json(replies);
   } catch (err) {
     res.status(500).json("Cannot get comment");
   }
 });
-
 
 module.exports = router;

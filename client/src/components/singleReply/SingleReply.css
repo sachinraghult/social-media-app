@@ -193,23 +193,3 @@
   vertical-align: middle;
   border-radius: 2px;
 }
-
-.writeInput {
-  font-size: 14px;
-  border: none;
-}
-
-.writeInput::placeholder {
-  color: rgb(189, 185, 185);
-  font-weight: 400;
-}
-
-.writeInput:focus {
-  outline-style: none;
-}
-
-.editBtn {
-  border: none;
-  background-color: inherit;
-  cursor: pointer;
-}

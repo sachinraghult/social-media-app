@@ -22,6 +22,10 @@ const CommentSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Comment",
     },
+    edited: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
