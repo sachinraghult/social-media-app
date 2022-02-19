@@ -8,11 +8,11 @@ import Settings from "./pages/settings/Settings";
 import SinglePost from "./pages/singlePost/SinglePost";
 import React, { useContext } from "react";
 import { Context } from "./context/Context";
+import ConfirmDelete from "./pages/confirmDelete/ConfirmDelete";
 
 function App() {
+  const { user, authToken } = useContext(Context);
 
-  const {user, authToken} = useContext(Context)
-  
   return (
     <BrowserRouter>
       <Routes>
@@ -22,6 +22,10 @@ function App() {
         <Route path="/timeline" element={user ? <Timeline /> : <Login />} />
         <Route path="/profile" element={user ? <Profile /> : <Login />} />
         <Route path="/settings" element={user ? <Settings /> : <Login />} />
+        <Route
+          path="/confirmDelete"
+          element={user ? <ConfirmDelete /> : <Login />}
+        />
         <Route path="/post/:id" element={user ? <SinglePost /> : <Login />} />
       </Routes>
     </BrowserRouter>

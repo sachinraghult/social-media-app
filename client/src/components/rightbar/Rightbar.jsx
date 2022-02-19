@@ -1,6 +1,9 @@
 import "./rightbar.css";
 import { Users } from "../../dummyData";
 import Online from "../online/Online";
+import { useContext } from "react";
+import { Context } from "../../context/Context";
+import moment from "moment";
 
 export default function Rightbar({ profile }) {
   const HomeRightbar = () => {
@@ -23,22 +26,31 @@ export default function Rightbar({ profile }) {
     );
   };
 
+  const { user, authToken } = useContext(Context);
+
   const ProfileRightbar = () => {
     return (
       <>
         <h4 className="rightbarTitle">User information</h4>
         <div className="rightbarInfo">
           <div className="rightbarInfoItem">
-            <span className="rightbarInfoKey">City:</span>
-            <span className="rightbarInfoValue">New York</span>
+            <span className="rightbarInfoKey">Username : </span>
+            <span className="rightbarInfoValue">{user.username}</span>
           </div>
           <div className="rightbarInfoItem">
-            <span className="rightbarInfoKey">From:</span>
-            <span className="rightbarInfoValue">Madrid</span>
+            <span className="rightbarInfoKey">Sex : </span>
+            <span className="rightbarInfoValue">{user.gender}</span>
           </div>
           <div className="rightbarInfoItem">
-            <span className="rightbarInfoKey">Relationship:</span>
-            <span className="rightbarInfoValue">Single</span>
+            <span className="rightbarInfoKey">DOB : </span>
+            <span className="rightbarInfoValue">
+              {moment(user.dob).format("MMM Do YYYY")}
+            </span>
+          </div>
+          <div className="rightbarInfoItem">
+            <span className="rightbarInfoKey">
+              📅 <i>Joined at {new Date(user.createdAt).getFullYear()}</i>
+            </span>
           </div>
         </div>
         <h4 className="rightbarTitle">User friends</h4>

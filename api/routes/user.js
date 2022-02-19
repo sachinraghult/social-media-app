@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const verify = require("../middleware/verify");
 const Post = require("../models/Post");
 const Comment = require("../models/Comment");
+const Timeline = require("../models/Timeline");
 const axios = require("axios");
 
 //UPDATE
@@ -61,14 +62,15 @@ router.put("/follow", verify, async (req, res) => {
     const { password, ...others } = updatedFrom._doc;
 
     try {
-      await axios.post("http://localhost:5000/api/timeline", 
-        { to : req.query.followers },
-        { headers: {authorization : req.header("authorization") } }
+      await axios.post(
+        "http://localhost:5000/api/timeline",
+        { to: req.query.followers },
+        { headers: { authorization: req.header("authorization") } }
       );
     } catch (err) {
       res.status(401).json("Cannot insert timeline");
     }
-    
+
     res.status(200).json(others);
   } catch (err) {
     res.status(500).json("Cannot add follower");
@@ -103,7 +105,7 @@ router.put("/unfollow", verify, async (req, res) => {
     );
 
     const { password, ...others } = updatedFrom._doc;
-    
+
     res.status(200).json(others);
   } catch (err) {
     res.status(500).json("Cannot unfollow");
@@ -151,44 +153,46 @@ router.delete("/", verify, async (req, res) => {
     if (!user) return res.status(404).json("Access Denied!");
 
     // Cannot delete the comments of the owner and the other users
-    
+
     const posts = await Post.find({ userId: user._id });
-    
+
     await Promise.all(
       posts.map(async (post) => {
-        await Comment.deleteMany({post: post._id});
+        await Comment.deleteMany({ post: post._id });
       })
-    )
-    await Post.deleteMany({ userId: user._id })
+    );
+    await Timeline.deleteMany({ from: user._id });
+    await Timeline.deleteMany({ to: user._id });
+    await Comment.deleteMany({ user: user._id });
+    await Post.deleteMany({ userId: user._id });
 
     await User.updateMany(
-      {followers: user._id},
+      { followers: user._id },
       {
-        $pull: {followers: user._id}
+        $pull: { followers: user._id },
       }
     );
 
     await User.updateMany(
-      {following: user._id},
+      { following: user._id },
       {
-        $pull: {following: user._id}
+        $pull: { following: user._id },
       }
     );
 
     await Post.updateMany(
-      {likes: user._id},
+      { likes: user._id },
       {
-        $pull: {likes: user._id}
+        $pull: { likes: user._id },
       }
     );
 
     await Comment.updateMany(
-      {likes: user._id},
+      { likes: user._id },
       {
-        $pull: {likes: user._id}
+        $pull: { likes: user._id },
       }
     );
-
 
     await user.delete();
     res.status(200).json("User has been deleted...");

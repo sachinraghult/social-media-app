@@ -1,11 +1,16 @@
 import "./Settings.css";
+import { Link } from "react-router-dom";
 import Topbar from "../../components/topbar/Topbar";
 import Sidebar from "../../components/sidebar/Sidebar";
-import Feed from "../../components/feed/Feed";
+import MyFeed from "../../components/myFeed/MyFeed";
 import Rightbar from "../../components/rightbar/Rightbar";
 import { PermMedia } from "@material-ui/icons";
+import { useContext } from "react";
+import { Context } from "../../context/Context";
 
 export default function Profile() {
+  const { user, authToken } = useContext(Context);
+
   return (
     <>
       <Topbar />
@@ -14,21 +19,13 @@ export default function Profile() {
         <div className="profileRight">
           <div className="profileRightTop">
             <div className="profileCover">
-              <img
-                className="profileCoverImg"
-                src="assets/post/3.jpeg"
-                alt=""
-              />
+              <img className="profileCoverImg" src={user.coverPic} alt="" />
 
               <div>
                 <PermMedia
                   style={{ marginLeft: "49%", zIndex: "1", marginTop: "20px" }}
                 />
-                <img
-                  className="profileUserImg"
-                  src="assets/person/7.jpeg"
-                  alt=""
-                />
+                <img className="profileUserImg" src={user.profilePic} alt="" />
               </div>
             </div>
 
@@ -45,16 +42,18 @@ export default function Profile() {
               className="shareButton"
               style={{ float: "right" }}
             >
-              Edit
+              <Link className="link" to="/settings">
+                Edit
+              </Link>
             </button>
 
             <div className="profileInfo">
-              <h4 className="profileInfoName">Edit Kocaoglu</h4>
-              <span className="profileInfoDesc">Hello my friends!</span>
+              <h4 className="profileInfoName">{user.name}</h4>
+              <span className="profileInfoDesc">{user.status}</span>
             </div>
           </div>
           <div className="profileRightBottom">
-            <Feed />
+            <MyFeed />
             <Rightbar profile />
           </div>
         </div>
