@@ -10,6 +10,8 @@ import { useContext, useState } from "react";
 import { Context } from "../../context/Context";
 import { useEffect } from "react";
 import styled from "styled-components";
+import moment from "moment";
+import CalculateTime from "../calculateTime/CalculateTime";
 
 export default function Post({ post, recievedPostsState }) {
   const folder = "http://localhost:5000/images/";
@@ -117,7 +119,20 @@ export default function Post({ post, recievedPostsState }) {
                 />
                 <span className="postUsername">{post?.userId.name}</span>
                 <span className="postDate">
-                  {new Date(post?.createdAt).toDateString()}
+                  {post.edited ? (
+                    <>
+                      <i>edited </i>
+                      <CalculateTime
+                        current={new Date(moment().format())}
+                        previous={new Date(moment(post.edited).format())}
+                      />
+                    </>
+                  ) : (
+                    <CalculateTime
+                      current={new Date(moment().format())}
+                      previous={new Date(moment(post.createdAt).format())}
+                    />
+                  )}
                 </span>
               </div>
               <div className="postTopRight">

@@ -74,7 +74,7 @@ router.put("/:id", verify, async (req, res) => {
       req.params.id,
       {
         comment: req.body.comment,
-        edited: true,
+        edited: Date.now(),
       },
       { new: true }
     ).populate("user", "name username _id profilePic");

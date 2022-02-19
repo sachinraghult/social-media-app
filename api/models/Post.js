@@ -19,6 +19,9 @@ const PostSchema = new mongoose.Schema(
       type: [mongoose.Schema.Types.ObjectId],
       ref: "User",
     },
+    edited: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );

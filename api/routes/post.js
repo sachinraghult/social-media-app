@@ -15,7 +15,10 @@ router.post("/", verify, async (req, res) => {
     const newPost = new Post(postData);
 
     var savedPost = await newPost.save();
-    savedPost = await savedPost.populate("userId", "name username _id profilePic");
+    savedPost = await savedPost.populate(
+      "userId",
+      "name username _id profilePic"
+    );
 
     res.status(200).json(savedPost);
   } catch (err) {
@@ -35,10 +38,11 @@ router.put("/:id", verify, async (req, res) => {
       req.params.id,
       {
         $set: req.body,
+        edited: Date.now(),
       },
       { new: true }
     ).populate("userId", "name username _id profilePic");
-    
+
     res.status(200).json(updatedPost);
   } catch (err) {
     res.status(500).json("Cannot update post");
@@ -73,9 +77,10 @@ router.put("/like/:id", verify, async (req, res) => {
       );
 
       try {
-        await axios.post("http://localhost:5000/api/timeline", 
-          { to : post.userId, post: post._id },
-          { headers: {authorization : req.header("authorization") } }
+        await axios.post(
+          "http://localhost:5000/api/timeline",
+          { to: post.userId, post: post._id },
+          { headers: { authorization: req.header("authorization") } }
         );
       } catch (err) {
         res.status(401).json("Cannot insert timeline");
@@ -113,9 +118,9 @@ router.get("/:id", verify, async (req, res) => {
       "name username _id profilePic"
     );
 
-    var comments = await Comment.find({post: post._id, parent: null});
-    const response = {...post._doc, size : comments.length};
-  
+    var comments = await Comment.find({ post: post._id, parent: null });
+    const response = { ...post._doc, size: comments.length };
+
     res.status(200).json(response);
   } catch (err) {
     res.status(500).json("Cannot get a post");
@@ -152,9 +157,10 @@ router.get("/", verify, async (req, res) => {
     var response = [];
     await Promise.all(
       posts.map(async (post) => {
-        var comments = await Comment.find({post: post._id, parent: null});
-        response.push({...post._doc, size : comments.length});
-    }));
+        var comments = await Comment.find({ post: post._id, parent: null });
+        response.push({ ...post._doc, size: comments.length });
+      })
+    );
 
     res.status(200).json(response);
   } catch (err) {

@@ -5,6 +5,8 @@ import { useContext, useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { Context } from "../../context/Context";
 import SingleReply from "../singleReply/SingleReply";
+import CalculateTime from "../calculateTime/CalculateTime";
+import moment from "moment";
 
 function SingleComment({
   comment,
@@ -164,7 +166,22 @@ function SingleComment({
                 <i className="fa fa-thumbs-o-up" onClick={handleLike}></i>{" "}
                 <span className="count">{like}</span>
                 <span aria-hidden="true"> · </span>
-                <span>{new Date(comment.createdAt).toDateString()}</span>
+                <span>
+                  {comment.edited ? (
+                    <>
+                      <i>edited </i>
+                      <CalculateTime
+                        current={new Date(moment().format())}
+                        previous={new Date(moment(comment.edited).format())}
+                      />
+                    </>
+                  ) : (
+                    <CalculateTime
+                      current={new Date(moment().format())}
+                      previous={new Date(moment(comment.createdAt).format())}
+                    />
+                  )}
+                </span>
                 {/*Delete */}
                 {!edit
                   ? comment.user._id === user._id && (

@@ -5,6 +5,8 @@ import { useContext } from "react";
 import { useEffect } from "react";
 import { Context } from "../../context/Context";
 import { useState } from "react";
+import CalculateTime from "../calculateTime/CalculateTime";
+import moment from "moment";
 
 function SingleReply({ reply, recievedRepliesState }) {
   const { user, authToken } = useContext(Context);
@@ -31,11 +33,15 @@ function SingleReply({ reply, recievedRepliesState }) {
     setEdit(true);
 
     try {
-      const res = await axios.put("/comment/" + reply._id, {comment: editedReply}, {
-        headers: { authorization: authToken },
-      });
+      const res = await axios.put(
+        "/comment/" + reply._id,
+        { comment: editedReply },
+        {
+          headers: { authorization: authToken },
+        }
+      );
 
-      recievedRepliesState(reply._id, {type: "edit", res: res});
+      recievedRepliesState(reply._id, { type: "edit", res: res });
       setEdit(false);
     } catch (err) {}
   };
@@ -45,7 +51,7 @@ function SingleReply({ reply, recievedRepliesState }) {
       const res = await axios.delete("/comment/" + reply._id, {
         headers: { authorization: authToken },
       });
-      recievedRepliesState(reply._id, {type: "delete", res: res});
+      recievedRepliesState(reply._id, { type: "delete", res: res });
     } catch (err) {}
   };
 
@@ -82,7 +88,22 @@ function SingleReply({ reply, recievedRepliesState }) {
             <i className="fa fa-thumbs-o-up" onClick={handleLike}></i>{" "}
             <span className="count">{like}</span>
             <span aria-hidden="true"> · </span>
-            <span>{new Date(reply.createdAt).toDateString()}</span>
+            <span>
+              {reply.edited ? (
+                <>
+                  <i>edited </i>
+                  <CalculateTime
+                    current={new Date(moment().format())}
+                    previous={new Date(moment(reply.edited).format())}
+                  />
+                </>
+              ) : (
+                <CalculateTime
+                  current={new Date(moment().format())}
+                  previous={new Date(moment(reply.createdAt).format())}
+                />
+              )}
+            </span>
             {/*Delete */}
             {!edit
               ? reply.user._id === user._id && (
@@ -125,8 +146,6 @@ function SingleReply({ reply, recievedRepliesState }) {
             )}
           </div>
         </form>
-
-
       </div>
     </li>
   );
