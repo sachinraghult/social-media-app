@@ -113,7 +113,7 @@ router.get("/:id", verify, async (req, res) => {
       "name username _id profilePic"
     );
 
-    var comments = await Comment.find({post: post._id});
+    var comments = await Comment.find({post: post._id, parent: null});
     const response = {...post._doc, size : comments.length};
   
     res.status(200).json(response);
@@ -152,7 +152,7 @@ router.get("/", verify, async (req, res) => {
     var response = [];
     await Promise.all(
       posts.map(async (post) => {
-        var comments = await Comment.find({post: post._id});
+        var comments = await Comment.find({post: post._id, parent: null});
         response.push({...post._doc, size : comments.length});
     }));
 

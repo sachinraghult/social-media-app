@@ -8,10 +8,11 @@ import { useContext } from "react";
 import { useEffect } from "react";
 import { Context } from "../../context/Context";
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function SinglePost() {
   const location = useLocation();
+  const navigate = useNavigate();
   const path = location.pathname.split("/")[2];
 
   const { authToken } = useContext(Context);
@@ -32,6 +33,21 @@ export default function SinglePost() {
     getPost();
   }, []);
 
+  const sendPostState = (id, action) => {
+    if (action.type === "edit") {
+      var size = post.size;
+      action.res.data.size = size;
+      setPost(action.res.data);
+    } else if (action.type === "delete") {
+      navigate("/", { replace: true });
+    }
+  };
+
+  const sendCommentsSize = (change) => {
+    setPost({ ...post, size: post.size + change });
+    console.log(post.size);
+  };
+
   return (
     <>
       <Topbar />
@@ -39,11 +55,11 @@ export default function SinglePost() {
         <Sidebar />
         <div className="SinglePostMainContainer">
           <div className="SinglePostContainer">
-            {post && <Post post={post} />}
+            {post && <Post post={post} recievedPostsState={sendPostState} />}
           </div>
         </div>
         <div className="dummy">
-          <Comments />
+          <Comments recievedCommentsSize={sendCommentsSize} />
         </div>
       </div>
     </>

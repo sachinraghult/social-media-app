@@ -6,8 +6,11 @@ import { useLocation } from "react-router-dom";
 import { Context } from "../../context/Context";
 import SingleReply from "../singleReply/SingleReply";
 
-function SingleComment({ comment, recievedCommentsState }) {
-
+function SingleComment({
+  comment,
+  recievedCommentsState,
+  recievedCommentsSize,
+}) {
   const location = useLocation();
   const path = location.pathname.split("/")[2];
 
@@ -67,11 +70,15 @@ function SingleComment({ comment, recievedCommentsState }) {
     setEdit(true);
 
     try {
-      const res = await axios.put("/comment/" + comment._id, {comment: editedComment}, {
-        headers: { authorization: authToken },
-      });
+      const res = await axios.put(
+        "/comment/" + comment._id,
+        { comment: editedComment },
+        {
+          headers: { authorization: authToken },
+        }
+      );
 
-      recievedCommentsState(comment._id, {type: "edit", res: res});
+      recievedCommentsState(comment._id, { type: "edit", res: res });
       setEdit(false);
     } catch (err) {}
   };
@@ -81,7 +88,8 @@ function SingleComment({ comment, recievedCommentsState }) {
       const res = await axios.delete("/comment/" + comment._id, {
         headers: { authorization: authToken },
       });
-      recievedCommentsState(comment._id, {type: "delete", res: res});
+      recievedCommentsState(comment._id, { type: "delete", res: res });
+      recievedCommentsSize(-1);
     } catch (err) {}
   };
 
@@ -124,7 +132,9 @@ function SingleComment({ comment, recievedCommentsState }) {
             <h4 style={{ marginLeft: "20px" }}>{comment.user.name}</h4>
             <form onSubmit={handleEdit}>
               {!edit ? (
-                <p className="displayComment" style={{ marginLeft: "20px" }}>{comment.comment}</p>
+                <p className="displayComment" style={{ marginLeft: "20px" }}>
+                  {comment.comment}
+                </p>
               ) : (
                 <textarea
                   style={{ marginLeft: "20px" }}

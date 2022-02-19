@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import { Context } from "../../context/Context";
 import { useState } from "react";
 
-function Comments() {
+function Comments({ recievedCommentsSize }) {
   const location = useLocation();
   const path = location.pathname.split("/")[2];
 
@@ -61,7 +61,9 @@ function Comments() {
           headers: { authorization: authToken },
         }
       );
+
       setMain([res.data, ...main]);
+      recievedCommentsSize(1);
       e.target.reset();
     } catch (err) {}
   };
@@ -107,6 +109,7 @@ function Comments() {
               key={comment._id}
               comment={comment}
               recievedCommentsState={sendCommentsState}
+              recievedCommentsSize={recievedCommentsSize}
             />
           ))}
         </div>

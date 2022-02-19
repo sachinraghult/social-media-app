@@ -60,8 +60,7 @@ export default function Post({ post, recievedPostsState }) {
       const res = await axios.put("/post/" + post._id, editedPost, {
         headers: { authorization: authToken },
       });
-      
-      
+
       recievedPostsState(post._id, { type: "edit", res: res });
       setDisable(false);
       setEdit(false);
@@ -81,10 +80,11 @@ export default function Post({ post, recievedPostsState }) {
     } catch (err) {}
   };
 
-  const handleCancel =  () => {
+  const handleCancel = () => {
+    setEditedFile(null);
     setEdit(false);
     setAnchorEl(null);
-  }
+  };
 
   {
     /*Morevert*/
@@ -122,33 +122,39 @@ export default function Post({ post, recievedPostsState }) {
               </div>
               <div className="postTopRight">
                 {true ? <Bookmark /> : <BookmarkBorder />}
-                <IconStyled>
-                  <IconButton
-                    aria-label="more"
-                    onClick={handleClick}
-                    aria-haspopup="true"
-                    aria-controls="long-menu"
-                  >
-                    <MoreVert />
-                  </IconButton>
-                </IconStyled>
-                <Menu
-                  anchorEl={anchorEl}
-                  keepMounted
-                  onClose={handleClose}
-                  open={open}
-                >
-                  {MyOptions.map((option) => (
-                    <MenuItem
-                      key={option}
-                      onClick={
-                        option === "Edit Post" ? () => setEdit(true) : handleDelete
-                      }
+                {user._id === post.userId._id && (
+                  <>
+                    <IconStyled>
+                      <IconButton
+                        aria-label="more"
+                        onClick={handleClick}
+                        aria-haspopup="true"
+                        aria-controls="long-menu"
+                      >
+                        <MoreVert />
+                      </IconButton>
+                    </IconStyled>
+                    <Menu
+                      anchorEl={anchorEl}
+                      keepMounted
+                      onClose={handleClose}
+                      open={open}
                     >
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Menu>
+                      {MyOptions.map((option) => (
+                        <MenuItem
+                          key={option}
+                          onClick={
+                            option === "Edit Post"
+                              ? () => setEdit(true)
+                              : handleDelete
+                          }
+                        >
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </Menu>
+                  </>
+                )}
               </div>
             </div>
             <div className="postCenter">
@@ -203,7 +209,11 @@ export default function Post({ post, recievedPostsState }) {
             {!editedfile ? (
               <img className="postImg" src={folder + post?.photo} alt="" />
             ) : (
-              <img className="postImg" src={URL.createObjectURL(editedfile)} alt="" />
+              <img
+                className="postImg"
+                src={URL.createObjectURL(editedfile)}
+                alt=""
+              />
             )}
             <hr className="shareHr" />
 
@@ -223,10 +233,20 @@ export default function Post({ post, recievedPostsState }) {
                   onChange={(e) => setEditedFile(e.target.files[0])}
                 />
               </div>
-              <button type="submit" style={{float: "right"}} className="shareButton" disabled={disable}>
+              <button
+                type="submit"
+                style={{ float: "right" }}
+                className="shareButton"
+                disabled={disable}
+              >
                 Post
               </button>
-              <button type="button" style={{backgroundColor: "red"}} className="shareButton" onClick={handleCancel}>
+              <button
+                type="button"
+                style={{ backgroundColor: "red" }}
+                className="shareButton"
+                onClick={handleCancel}
+              >
                 Cancel
               </button>
             </div>

@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { Context } from "../../context/Context";
 import { useState } from "react";
 
-export default function Share({recievedPostState}) {
+export default function Share({ recievedPostState }) {
   const { user, authToken } = useContext(Context);
 
   const [desc, setDesc] = useState();
@@ -38,13 +38,12 @@ export default function Share({recievedPostState}) {
       const post = await axios.post("/post", newPost, {
         headers: { authorization: authToken },
       });
-      
+
       post.data.size = 0;
       recievedPostState(post);
 
-      setDisable(false);
-
       e.target.reset();
+      setDisable(false);
       setFile(null);
     } catch (err) {
       setDisable(false);
