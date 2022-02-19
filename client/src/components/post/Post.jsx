@@ -114,7 +114,7 @@ export default function Post({ post, recievedPostsState }) {
               <div className="postTopLeft">
                 <img
                   className="postProfileImg"
-                  src={post?.userId.profilePic}
+                  src={folder + post?.userId.profilePic}
                   alt=""
                 />
                 <span className="postUsername">{post?.userId.name}</span>

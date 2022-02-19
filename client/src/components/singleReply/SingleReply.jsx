@@ -9,6 +9,8 @@ import CalculateTime from "../calculateTime/CalculateTime";
 import moment from "moment";
 
 function SingleReply({ reply, recievedRepliesState }) {
+  const folder = "http://localhost:5000/images/";
+
   const { user, authToken } = useContext(Context);
 
   const [like, setLike] = useState(0);
@@ -59,7 +61,7 @@ function SingleReply({ reply, recievedRepliesState }) {
     <li className="box_reply row" style={{ marginTop: "15px" }}>
       <div className="avatar_comment col-md-1">
         <img
-          src={reply.user.profilePic}
+          src={folder + reply.user.profilePic}
           alt="avatar"
           referrerPolicy="no-referrer"
         />

@@ -7,6 +7,8 @@ import { Context } from "../../context/Context";
 import { useState } from "react";
 
 export default function Share({ recievedPostState }) {
+  const folder = "http://localhost:5000/images/";
+
   const { user, authToken } = useContext(Context);
 
   const [desc, setDesc] = useState();
@@ -56,7 +58,7 @@ export default function Share({ recievedPostState }) {
         <div className="shareTop">
           <img
             className="shareProfileImg"
-            src={user.profilePic}
+            src={folder + user.profilePic}
             alt=""
             required
           />

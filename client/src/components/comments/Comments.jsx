@@ -9,6 +9,8 @@ import { Context } from "../../context/Context";
 import { useState } from "react";
 
 function Comments({ recievedCommentsSize }) {
+  const folder = "http://localhost:5000/images/";
+
   const location = useLocation();
   const path = location.pathname.split("/")[2];
 
@@ -92,7 +94,7 @@ function Comments({ recievedCommentsSize }) {
                 <div className="pull-right">
                   <span>
                     <img
-                      src={user.profilePic}
+                      src={folder + user.profilePic}
                       alt="avatar"
                       referrerPolicy="no-referrer"
                     />

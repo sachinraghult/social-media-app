@@ -1,22 +1,27 @@
-import React, { useContext } from 'react';
-import {Link} from 'react-router-dom'
+import React, { useContext } from "react";
+import { Link } from "react-router-dom";
 import "./topbar.css";
-import { Context } from '../../context/Context';
-import { Logout } from "../../context/Actions"
+import { Context } from "../../context/Context";
+import { Logout } from "../../context/Actions";
 import { Search, Person, Chat, Notifications } from "@material-ui/icons";
 
 export default function Topbar() {
+  const folder = "http://localhost:5000/images/";
 
-  const {user, dispatch} = useContext(Context);
+  const { user, dispatch } = useContext(Context);
 
   const handleSubmit = async (e) => {
     dispatch(Logout());
-  }
+  };
 
   return (
     <div className="topbarContainer">
       <div className="topbarLeft">
-        <span className="logo"><Link className="link" to='/'>Lamasocial</Link></span>
+        <span className="logo">
+          <Link className="link" to="/">
+            Lamasocial
+          </Link>
+        </span>
       </div>
       <div className="topbarCenter">
         <div className="searchbar">
@@ -30,15 +35,17 @@ export default function Topbar() {
       <div className="topbarRight">
         <div className="topbarLinks">
           <span className="topbarLink">
-          <Link className="link" to='/timeline'>Timeline</Link>
+            <Link className="link" to="/timeline">
+              Timeline
+            </Link>
           </span>
           <span className="topbarLink" onClick={handleSubmit}>
-          Logout
+            Logout
           </span>
         </div>
         <div className="topbarIcons">
           <div className="topbarIconItem">
-            <Link className="link" to='/profile'>
+            <Link className="link" to="/profile">
               <Person />
               <span className="topbarIconBadge">1</span>
             </Link>
@@ -48,19 +55,19 @@ export default function Topbar() {
             <span className="topbarIconBadge">2</span>
           </div>
           <div className="topbarIconItem">
-            <Link className="link" to='/timeline'>
+            <Link className="link" to="/timeline">
               <Notifications />
               <span className="topbarIconBadge">1</span>
             </Link>
           </div>
         </div>
-        <Link className="link" to='/profile'>
-        <img 
-        src={user.profilePic} 
-        alt="" 
-        className="topbarImg"
-        referrerPolicy="no-referrer"
-        />
+        <Link className="link" to="/profile">
+          <img
+            src={folder + user.profilePic}
+            alt=""
+            className="topbarImg"
+            referrerPolicy="no-referrer"
+          />
         </Link>
       </div>
     </div>

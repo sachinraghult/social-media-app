@@ -4,11 +4,12 @@ import Topbar from "../../components/topbar/Topbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import MyFeed from "../../components/myFeed/MyFeed";
 import Rightbar from "../../components/rightbar/Rightbar";
-import { PermMedia } from "@material-ui/icons";
 import { useContext } from "react";
 import { Context } from "../../context/Context";
 
 export default function Profile() {
+  const folder = "http://localhost:5000/images/";
+
   const { user, authToken } = useContext(Context);
 
   return (
@@ -19,13 +20,18 @@ export default function Profile() {
         <div className="profileRight">
           <div className="profileRightTop">
             <div className="profileCover">
-              <img className="profileCoverImg" src={user.coverPic} alt="" />
+              <img
+                className="profileCoverImg"
+                src={folder + user.coverPic}
+                alt=""
+              />
 
               <div>
-                <PermMedia
-                  style={{ marginLeft: "49%", zIndex: "1", marginTop: "20px" }}
+                <img
+                  className="profileUserImg"
+                  src={folder + user.profilePic}
+                  alt=""
                 />
-                <img className="profileUserImg" src={user.profilePic} alt="" />
               </div>
             </div>
 

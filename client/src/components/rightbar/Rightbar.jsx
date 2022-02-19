@@ -38,11 +38,11 @@ export default function Rightbar({ profile }) {
             <span className="rightbarInfoValue">{user.username}</span>
           </div>
           <div className="rightbarInfoItem">
-            <span className="rightbarInfoKey">Sex : </span>
+            <span className="rightbarInfoKey">Sex : &emsp;&emsp;&emsp;</span>
             <span className="rightbarInfoValue">{user.gender}</span>
           </div>
           <div className="rightbarInfoItem">
-            <span className="rightbarInfoKey">DOB : </span>
+            <span className="rightbarInfoKey">DOB : &emsp;&emsp; &ensp;</span>
             <span className="rightbarInfoValue">
               {moment(user.dob).format("MMM Do YYYY")}
             </span>

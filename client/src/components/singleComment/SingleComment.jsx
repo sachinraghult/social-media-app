@@ -13,6 +13,8 @@ function SingleComment({
   recievedCommentsState,
   recievedCommentsSize,
 }) {
+  const folder = "http://localhost:5000/images/";
+
   const location = useLocation();
   const path = location.pathname.split("/")[2];
 
@@ -123,7 +125,7 @@ function SingleComment({
         <li className="box_result row">
           <div className="avatar_comment col-md-1">
             <img
-              src={comment.user.profilePic}
+              src={folder + comment.user.profilePic}
               alt="avatar"
               referrerPolicy="no-referrer"
             />
@@ -243,7 +245,7 @@ function SingleComment({
                   <div className="pull-right">
                     <span>
                       <img
-                        src={user.profilePic}
+                        src={folder + user.profilePic}
                         alt="avatar"
                         referrerPolicy="no-referrer"
                       />
