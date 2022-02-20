@@ -10,7 +10,7 @@ import { Context } from "../../context/Context";
 import axios from "../../axios";
 import { UpdateSuccess } from "../../context/Actions";
 
-export default function Profile() {
+export default function Settings() {
   const folder = "http://localhost:5000/images/";
   const { user, authToken, dispatch } = useContext(Context);
 

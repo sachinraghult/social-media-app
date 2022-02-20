@@ -1,3 +1,5 @@
+import React, { useContext } from "react";
+import { Context } from "./context/Context";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Timeline from "./pages/timeline/Timeline";
 import Home from "./pages/home/Home";
@@ -6,9 +8,8 @@ import Profile from "./pages/profile/Profile";
 import Register from "./pages/register/Register";
 import Settings from "./pages/settings/Settings";
 import SinglePost from "./pages/singlePost/SinglePost";
-import React, { useContext } from "react";
-import { Context } from "./context/Context";
 import ConfirmDelete from "./pages/confirmDelete/ConfirmDelete";
+import Friends from "./pages/friends/Friends"
 
 function App() {
   const { user, authToken } = useContext(Context);
@@ -22,6 +23,7 @@ function App() {
         <Route path="/timeline" element={user ? <Timeline /> : <Login />} />
         <Route path="/profile" element={user ? <Profile /> : <Login />} />
         <Route path="/settings" element={user ? <Settings /> : <Login />} />
+        <Route path="/friends" element={user ? <Friends /> : <Login />} />
         <Route
           path="/confirmDelete"
           element={user ? <ConfirmDelete /> : <Login />}
