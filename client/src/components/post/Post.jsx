@@ -212,7 +212,7 @@ export default function Post({ post, recievedPostsState }) {
             <div className="shareTop">
               <img
                 className="shareProfileImg"
-                src={user.profilePic}
+                src={folder + user.profilePic}
                 alt=""
                 required
               />
