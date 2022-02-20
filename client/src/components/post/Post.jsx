@@ -18,14 +18,14 @@ export default function Post({ post, recievedPostsState }) {
 
   const { user, authToken } = useContext(Context);
 
-  const [like, setLike] = useState(0);
+  const [like, setLike] = useState([]);
   const [edit, setEdit] = useState(false);
   const [desc, setDesc] = useState(post?.desc);
   const [editedfile, setEditedFile] = useState();
   const [disable, setDisable] = useState(false);
 
   useEffect(() => {
-    setLike(post?.likes.length);
+    setLike(post?.likes);
   }, [post]);
 
   const handleLike = async (e) => {
@@ -33,7 +33,7 @@ export default function Post({ post, recievedPostsState }) {
       const res = await axios.put("/post/like/" + post._id, post, {
         headers: { authorization: authToken },
       });
-      setLike(res.data.likes.length);
+      setLike(res.data.likes);
     } catch (err) {}
   };
 
@@ -191,7 +191,10 @@ export default function Post({ post, recievedPostsState }) {
                   onClick={handleLike}
                   alt=""
                 />
-                <span className="postLikeCounter">{like} people liked it</span>
+                <span className="postLikeCounter">
+                  {like.length} people {like.includes(user._id) && "and you "}
+                  liked it
+                </span>
               </div>
               <div className="postBottomRight">
                 <span className="postCommentText">
