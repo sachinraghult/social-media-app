@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from "react-router-dom";
+
 import "./SingleReply.css";
 import axios from "../../axios";
 import { useContext } from "react";
@@ -60,14 +62,18 @@ function SingleReply({ reply, recievedRepliesState }) {
   return (
     <li className="box_reply row" style={{ marginTop: "15px" }}>
       <div className="avatar_comment col-md-1">
-        <img
-          src={folder + reply.user.profilePic}
-          alt="avatar"
-          referrerPolicy="no-referrer"
-        />
+        <Link className="link" to={`/user/${reply.user._id}`}>
+          <img
+            src={folder + reply.user.profilePic}
+            alt="avatar"
+            referrerPolicy="no-referrer"
+          />
+        </Link>
       </div>
       <div className="result_comment col-md-11">
-        <h4 style={{ marginLeft: "20px" }}>{reply.user.name}</h4>
+        <Link className="link" to={`/user/${reply.user._id}`}>
+          <h4 style={{ marginLeft: "20px" }}>{reply.user.name}</h4>
+        </Link>
         {/*Form */}
         <form onSubmit={handleEdit}>
           {!edit ? (

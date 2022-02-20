@@ -112,12 +112,14 @@ export default function Post({ post, recievedPostsState }) {
           <div className="postWrapper">
             <div className="postTop">
               <div className="postTopLeft">
-                <img
-                  className="postProfileImg"
-                  src={folder + post?.userId.profilePic}
-                  alt=""
-                />
-                <span className="postUsername">{post?.userId.name}</span>
+                <Link className="link" to={`/user/${post?.userId._id}`}>
+                  <img
+                    className="postProfileImg"
+                    src={folder + post?.userId.profilePic}
+                    alt=""
+                  />
+                  <span className="postUsername">{post?.userId.name}</span>
+                </Link>
                 <span className="postDate">
                   {post.edited ? (
                     <>

@@ -2,7 +2,7 @@ import React from "react";
 import "./SingleComment.css";
 import axios from "../../axios";
 import { useContext, useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Context } from "../../context/Context";
 import SingleReply from "../singleReply/SingleReply";
 import CalculateTime from "../calculateTime/CalculateTime";
@@ -124,16 +124,20 @@ function SingleComment({
       <ul id="list_comment" className="col-md-12">
         <li className="box_result row">
           <div className="avatar_comment col-md-1">
-            <img
-              src={folder + comment.user.profilePic}
-              alt="avatar"
-              referrerPolicy="no-referrer"
-            />
+            <Link className="link" to={`/user/${comment.user._id}`}>
+              <img
+                src={folder + comment.user.profilePic}
+                alt="avatar"
+                referrerPolicy="no-referrer"
+              />
+            </Link>
           </div>
 
           {/*main comment */}
           <div className="result_comment col-md-11">
-            <h4 style={{ marginLeft: "20px" }}>{comment.user.name}</h4>
+            <Link className="link" to={`/user/${comment.user._id}`}>
+              <h4 style={{ marginLeft: "20px" }}>{comment.user.name}</h4>
+            </Link>
             <form onSubmit={handleEdit}>
               {!edit ? (
                 <p className="displayComment" style={{ marginLeft: "20px" }}>

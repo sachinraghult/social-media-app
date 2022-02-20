@@ -136,7 +136,7 @@ export default function UserProfile() {
                     className="shareButton"
                     style={{ float: "right", backgroundColor: "#7e54f3" }}
                   >
-                    <Link className="link" to="/friends">
+                    <Link className="link" to={`/userfriends/${profile?._id}`}>
                       {profile.following.length} Following
                     </Link>
                   </button>
@@ -145,7 +145,7 @@ export default function UserProfile() {
                     className="shareButton"
                     style={{ float: "right", backgroundColor: "#1877f2" }}
                   >
-                    <Link className="link" to="/friends">
+                    <Link className="link" to={`/userfriends/${profile?._id}`}>
                       {profile.followers.length} Followers
                     </Link>
                   </button>
@@ -153,7 +153,7 @@ export default function UserProfile() {
               </div>
             </div>
             <div className="profileRightBottom">
-              <ProfileFeed  user={profile} />
+              <ProfileFeed user={profile} />
               <Rightbar profile user={profile} />
             </div>
           </div>
