@@ -7,11 +7,12 @@ import { Logout } from "../../context/Actions";
 import { useState } from "react";
 import { useEffect } from "react";
 import axios from "../../axios";
+import { UpdateSuccess } from "../../context/Actions";
 
 export default function DisplayFriends({ type }) {
   const folder = "http://localhost:5000/images/";
 
-  const { user, authToken } = useContext(Context);
+  const { user, authToken, dispatch } = useContext(Context);
 
   const [friends, setFriends] = useState([]);
 
@@ -30,40 +31,80 @@ export default function DisplayFriends({ type }) {
     getFriends();
   }, []);
 
+  const handleUnfollow = async (id) => {
+    try {
+      const res = await axios.put("/user/unfollow?followers=" + id, user, {
+        headers: { authorization: authToken },
+      });
+      var filteredFollowing = friends.filter(
+        (friend) => friend._id.toString() !== id.toString()
+      );
+      setFriends(filteredFollowing);
+      dispatch(UpdateSuccess(res.data));
+    } catch (err) {}
+  };
+
+  const handleRemove = async (id) => {
+    try {
+      const res = await axios.put("/user/remove?followers=" + id, user, {
+        headers: { authorization: authToken },
+      });
+      var filteredFollowers = friends.filter(
+        (friend) => friend._id.toString() !== id.toString()
+      );
+      setFriends(filteredFollowers);
+      dispatch(UpdateSuccess(res.data));
+    } catch (err) {}
+  };
+
   return (
     <div className="sidebar">
       <div className="sidebarWrapper">
-        <span className="heading">{type}</span>
-        <hr className="sidebarHr" />
+        <div className="headingContainer">
+          <span className="heading">{type}</span>
+          <hr className="sidebarHr" />
+        </div>
         <ul className="sidebarFriendList">
           {friends &&
             friends.map((user) => (
               <li className="sidebarCloseFriend">
                 <div>
-                  <div style={{ display: "flex", flexDirection: "row" }}>
-                    <img
-                      className="sidebarCloseFriendImg"
-                      src={folder + user.profilePic}
-                      alt=""
-                    />
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                      <span className="sidebarFriendName">{user.username}</span>
-                      <small
-                        className="sidebarFriendName"
-                        style={{ color: "grey" }}
-                      >
-                        {user.name}
-                      </small>
+                  <Link className="link" to={`/user/${user._id}`}>
+                    <div style={{ display: "flex", flexDirection: "row" }}>
+                      <img
+                        className="sidebarCloseFriendImg"
+                        src={folder + user.profilePic}
+                        alt=""
+                      />
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        <span className="sidebarFriendName">
+                          {user.username}
+                        </span>
+                        <small
+                          className="sidebarFriendName"
+                          style={{ color: "grey" }}
+                        >
+                          {user.name}
+                        </small>
+                      </div>
                     </div>
-                  </div>
+                  </Link>
                 </div>
                 <div>
                   {type === "Following" ? (
-                    <button type="submit" className="followButton">
+                    <button
+                      type="submit"
+                      className="followButton"
+                      onClick={() => handleUnfollow(user._id)}
+                    >
                       Unfollow
                     </button>
                   ) : (
-                    <button type="submit" className="followButton">
+                    <button
+                      type="submit"
+                      className="followButton"
+                      onClick={() => handleRemove(user._id)}
+                    >
                       Remove
                     </button>
                   )}

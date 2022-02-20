@@ -330,7 +330,7 @@ export default function Settings() {
                 )}
               </div>
             </div>
-            <Rightbar profile />
+            <Rightbar profile user={user} />
           </div>
         </div>
       </div>

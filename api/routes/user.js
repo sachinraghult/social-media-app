@@ -40,7 +40,7 @@ router.put("/follow", verify, async (req, res) => {
 
     let to = await User.findById(req.query.followers);
     if (!to) return res.status(404).json("User not found!");
-
+    
     if (to.followers.includes(from._id))
       return res.status(404).json("Follower already exist!");
 
@@ -112,8 +112,8 @@ router.put("/unfollow", verify, async (req, res) => {
   }
 });
 
-//BLOCK
-router.put("/block", verify, async (req, res) => {
+//REMOVE
+router.put("/remove", verify, async (req, res) => {
   try {
     const from = await User.findById(req.user._id);
     if (!from) return res.status(404).json("Access Denied!");
@@ -204,7 +204,12 @@ router.delete("/", verify, async (req, res) => {
 //GET USER
 router.get("/", verify, async (req, res) => {
   try {
-    const user = await User.findById(req.user._id);
+    const profile = req.query.profile;
+
+    var user;
+    if (profile) user = await User.findById(profile);
+    else user = await User.findById(req.user._id);
+
     if (!user) return res.status(404).json("User not found!");
 
     await user.populate("followers", "name username _id profilePic");

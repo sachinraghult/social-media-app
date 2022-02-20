@@ -9,7 +9,8 @@ import Register from "./pages/register/Register";
 import Settings from "./pages/settings/Settings";
 import SinglePost from "./pages/singlePost/SinglePost";
 import ConfirmDelete from "./pages/confirmDelete/ConfirmDelete";
-import Friends from "./pages/friends/Friends"
+import Friends from "./pages/friends/Friends";
+import UserProfile from "./pages/userProfile/UserProfile";
 
 function App() {
   const { user, authToken } = useContext(Context);
@@ -24,6 +25,7 @@ function App() {
         <Route path="/profile" element={user ? <Profile /> : <Login />} />
         <Route path="/settings" element={user ? <Settings /> : <Login />} />
         <Route path="/friends" element={user ? <Friends /> : <Login />} />
+        <Route path="/user/:id" element={user ? <UserProfile /> : <Login />} />
         <Route
           path="/confirmDelete"
           element={user ? <ConfirmDelete /> : <Login />}

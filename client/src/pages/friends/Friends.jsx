@@ -48,16 +48,16 @@ export default function Friends() {
                 <button
                   type="submit"
                   className="shareButton"
-                  style={{ float: "right", backgroundColor: "#1877f2" }}
+                  style={{ float: "right", backgroundColor: "#7e54f3" }}
                 >
-                  {user.followers.length} Followers
+                  {user.following.length} Following
                 </button>
                 <button
                   type="submit"
                   className="shareButton"
-                  style={{ float: "right", backgroundColor: "#7e54f3" }}
+                  style={{ float: "right", backgroundColor: "#1877f2" }}
                 >
-                  {user.following.length} Following
+                  {user.followers.length} Followers
                 </button>
               </div>
             </div>

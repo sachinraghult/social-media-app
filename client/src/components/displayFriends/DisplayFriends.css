@@ -1,95 +1,111 @@
 .sidebar {
-    flex: 3;
-    height: calc(100vh - 50px);
-    overflow-y: scroll;
-    position: sticky;
-    top: 50px;
-  }
-  
-  ::-webkit-scrollbar {
-    width: 5px;
-  }
-  ::-webkit-scrollbar-track {
-    background-color: #f1f1f1;
-  }
-  ::-webkit-scrollbar-thumb {
-    background-color: rgb(179, 179, 179);
-  }
-  
-  .sidebarWrapper {
-    padding: 20px;
-  }
-  
-  .sidebarList {
-    padding: 0;
-    margin: 0;
-    list-style: none;
-  }
-  
-  .sidebarListItem {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .sidebarIcon {
-    margin-right: 15px;
-  }
-  
-  .sidebarButton {
-    width: 150px;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
+  flex: 3;
+  height: calc(100vh - 50px);
+  overflow-y: scroll;
+  position: sticky;
+  top: 50px;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgb(179, 179, 179);
+}
+
+.sidebarWrapper {
+  padding: 20px;
+}
+
+.sidebarList {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.sidebarListItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.sidebarIcon {
+  margin-right: 15px;
+}
+
+.sidebarButton {
+  width: 150px;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  font-weight: 500;
+}
+
+.sidebarHr {
+  margin: 20px 0;
+}
+
+.sidebarFriendList {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.sidebarCloseFriend {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  width: 100%;
+  z-index: -1;
+}
+
+.sidebarCloseFriendImg {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.heading {
+  font-size: 20px;
+  font-weight: 500;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  color: grey;
+}
+
+.headingContainer {
+    font-size: 20px;
     font-weight: 500;
-  }
-  
-  .sidebarHr {
-    margin: 20px 0;
-  }
-  
-  .sidebarFriendList {
-    padding: 0;
-    margin: 0;
-    list-style: none;
-  }
-  
-  .sidebarCloseFriend {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+      "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+    color: grey;
+    background-color: white;
     width: 100%;
-  }
-  
-  .sidebarCloseFriendImg {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 10px;
-  }  
-
-  .heading {
-      font-size: 20px;
-      font-weight: 500;
-      font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-      color: grey;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
   }
 
-  .followButton {
-    border: none;
-    padding: 2px;
-    padding-left: 7px;
-    padding-right: 7px;
-    border-radius: 5px;
-    font-weight: 300;
-    margin-right: 20px;
-    cursor: pointer;
-    color: white;
-    background-color: #1877f2;
-  }
+.followButton {
+  border: none;
+  padding: 2px;
+  padding-left: 7px;
+  padding-right: 7px;
+  border-radius: 5px;
+  font-weight: 300;
+  margin-right: 20px;
+  cursor: pointer;
+  color: white;
+  background-color: #1877f2;
+}
 
-  .followButton:hover {
-    opacity: 0.8;
-  }
+.followButton:hover {
+  opacity: 0.8;
+}

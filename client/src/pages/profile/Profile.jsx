@@ -58,32 +58,37 @@ export default function Profile() {
             <div className="profileInfo">
               <h4 className="profileInfoName">{user.name}</h4>
               <span className="profileInfoDesc">{user.status}</span>
-              <div style={{display: "flex", marginTop: "5px", marginLeft: "20px"}}>
-
-            <button
-              type="submit"
-              className="shareButton"
-              style={{ float: "right", backgroundColor: "#1877f2" }}
-            >
-              <Link className="link" to="/friends">
-                {user.followers.length} Followers
-              </Link>
-            </button>
-            <button
-              type="submit"
-              className="shareButton"
-              style={{ float: "right", backgroundColor: "#7e54f3" }}
-            >
-              <Link className="link" to="/friends">
-                {user.following.length} Following
-              </Link>
-            </button>
-            </div>
+              <div
+                style={{
+                  display: "flex",
+                  marginTop: "5px",
+                  marginLeft: "20px",
+                }}
+              >
+                <button
+                  type="submit"
+                  className="shareButton"
+                  style={{ float: "right", backgroundColor: "#7e54f3" }}
+                >
+                  <Link className="link" to="/friends">
+                    {user.following.length} Following
+                  </Link>
+                </button>
+                <button
+                  type="submit"
+                  className="shareButton"
+                  style={{ float: "right", backgroundColor: "#1877f2" }}
+                >
+                  <Link className="link" to="/friends">
+                    {user.followers.length} Followers
+                  </Link>
+                </button>
+              </div>
             </div>
           </div>
           <div className="profileRightBottom">
             <MyFeed />
-            <Rightbar profile />
+            <Rightbar profile user={user} />
           </div>
         </div>
       </div>
