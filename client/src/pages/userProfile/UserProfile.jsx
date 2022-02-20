@@ -131,24 +131,25 @@ export default function UserProfile() {
                     marginLeft: "20px",
                   }}
                 >
-                  <button
-                    type="submit"
-                    className="shareButton"
-                    style={{ float: "right", backgroundColor: "#7e54f3" }}
-                  >
-                    <Link className="link" to={`/userfriends/${profile?._id}`}>
+                  <Link className="link" to={`/userfriends/${profile?._id}`}>
+                    <button
+                      type="submit"
+                      className="shareButton"
+                      style={{ float: "right", backgroundColor: "#7e54f3" }}
+                    >
                       {profile.following.length} Following
-                    </Link>
-                  </button>
-                  <button
-                    type="submit"
-                    className="shareButton"
-                    style={{ float: "right", backgroundColor: "#1877f2" }}
-                  >
-                    <Link className="link" to={`/userfriends/${profile?._id}`}>
+                    </button>
+                  </Link>
+
+                  <Link className="link" to={`/userfriends/${profile?._id}`}>
+                    <button
+                      type="submit"
+                      className="shareButton"
+                      style={{ float: "right", backgroundColor: "#1877f2" }}
+                    >
                       {profile.followers.length} Followers
-                    </Link>
-                  </button>
+                    </button>
+                  </Link>
                 </div>
               </div>
             </div>

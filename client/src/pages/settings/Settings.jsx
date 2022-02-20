@@ -236,15 +236,15 @@ export default function Settings() {
               </div>
             </div>
 
-            <button
-              type="submit"
-              className="shareButton"
-              style={{ float: "right", backgroundColor: "red" }}
-            >
-              <Link className="link" to="/profile">
+            <Link className="link" to="/profile">
+              <button
+                type="submit"
+                className="shareButton"
+                style={{ float: "right", backgroundColor: "red" }}
+              >
                 Cancel
-              </Link>
-            </button>
+              </button>
+            </Link>
 
             <div className="profileInfo">
               <h4 className="profileInfoName">{user.name}</h4>

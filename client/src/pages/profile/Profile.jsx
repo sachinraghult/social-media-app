@@ -35,25 +35,25 @@ export default function Profile() {
               </div>
             </div>
 
-            <button
-              type="submit"
-              className="shareButton"
-              style={{ float: "right", backgroundColor: "red" }}
-            >
-              <Link className="link" to="/confirmDelete">
+            <Link className="link" to="/confirmDelete">
+              <button
+                type="submit"
+                className="shareButton"
+                style={{ float: "right", backgroundColor: "red" }}
+              >
                 Delete
-              </Link>
-            </button>
+              </button>
+            </Link>
 
-            <button
-              type="submit"
-              className="shareButton"
-              style={{ float: "right" }}
-            >
-              <Link className="link" to="/settings">
+            <Link className="link" to="/settings">
+              <button
+                type="submit"
+                className="shareButton"
+                style={{ float: "right" }}
+              >
                 Edit
-              </Link>
-            </button>
+              </button>
+            </Link>
 
             <div className="profileInfo">
               <h4 className="profileInfoName">{user.name}</h4>
@@ -65,24 +65,25 @@ export default function Profile() {
                   marginLeft: "20px",
                 }}
               >
-                <button
-                  type="submit"
-                  className="shareButton"
-                  style={{ float: "right", backgroundColor: "#7e54f3" }}
-                >
-                  <Link className="link" to="/friends">
+                <Link className="link" to="/friends">
+                  <button
+                    type="submit"
+                    className="shareButton"
+                    style={{ float: "right", backgroundColor: "#7e54f3" }}
+                  >
                     {user.following.length} Following
-                  </Link>
-                </button>
-                <button
-                  type="submit"
-                  className="shareButton"
-                  style={{ float: "right", backgroundColor: "#1877f2" }}
-                >
-                  <Link className="link" to="/friends">
+                  </button>
+                </Link>
+
+                <Link className="link" to="/friends">
+                  <button
+                    type="submit"
+                    className="shareButton"
+                    style={{ float: "right", backgroundColor: "#1877f2" }}
+                  >
                     {user.followers.length} Followers
-                  </Link>
-                </button>
+                  </button>
+                </Link>
               </div>
             </div>
           </div>
