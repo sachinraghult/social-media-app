@@ -70,9 +70,9 @@ export default function SinglePost() {
           </div>
         </div>
         <div className="dummy">
-          {type == "likes" && <DisplayLikes post={post} />}
+          {type === "likes" && <DisplayLikes post={post} />}
 
-          {type == "comments" && (
+          {type === "comments" && (
             <Comments recievedCommentsSize={sendCommentsSize} />
           )}
         </div>

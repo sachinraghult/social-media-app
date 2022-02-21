@@ -1,5 +1,6 @@
 import React from "react";
 import "./Timeline.css";
+import { Link } from "react-router-dom";
 import Topbar from "../../components/topbar/Topbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import styled from "styled-components";
@@ -21,7 +22,6 @@ function Timeline() {
         const res = await axios.get("/timeline", {
           headers: { authorization: authToken },
         });
-        console.log("res", res.data);
 
         setTimeline(res.data);
       } catch (err) {}
@@ -29,6 +29,60 @@ function Timeline() {
 
     getTimeline();
   }, []);
+
+  const DisplayContent = ({ tl }) => {
+    if (tl?.comment) {
+      if (tl?.post) {
+        return (
+          <Link className="link" to={`/post/${tl.comment.post._id}/comments`}>
+            <p>
+              commented on your post : <i>{tl?.comment.comment}</i>
+            </p>
+          </Link>
+        );
+      } else {
+        return (
+          <Link className="link" to={`/post/${tl.comment.post._id}/comments`}>
+            <p>
+              replied to your comment on{" "}
+              <b>{tl?.comment.post.userId.name}'s post</b> :{" "}
+              <i>{tl?.comment.comment}</i>
+            </p>
+          </Link>
+        );
+      }
+    } else if (tl?.post) {
+      return (
+        <Link className="link" to={`/post/${tl.post._id}/likes`}>
+          <p>liked your post</p>
+        </Link>
+      );
+    } else {
+      return (
+        <Link className="link" to={`/user/${tl.from._id}`}>
+          <p>started following you</p>
+        </Link>
+      );
+    }
+  };
+
+  const DisplayImage = ({ tl }) => {
+    if (tl?.comment) {
+      return (
+        <Link className="link" to={`/post/${tl.comment.post._id}/comments`}>
+          <PostImage src={folder + tl?.comment.post.photo} />
+        </Link>
+      );
+    } else if (tl?.post) {
+      return (
+        <Link className="link" to={`/post/${tl.post._id}/likes`}>
+          <PostImage src={folder + tl?.post.photo} />
+        </Link>
+      );
+    } else {
+      return <p></p>;
+    }
+  };
 
   return (
     <>
@@ -44,14 +98,21 @@ function Timeline() {
                   timeline.map((tl, index) => (
                     <>
                       <ComponentContainer>
-                        <img
-                          src={folder + tl.from.profilePic}
-                          referrerPolicy="no-referrer"
-                        />
+                        <Link className="link" to={`/user/${tl.from._id}`}>
+                          <img
+                            src={folder + tl.from.profilePic}
+                            referrerPolicy="no-referrer"
+                          />
+                        </Link>
                         <ContentContainer>
                           <Content>
                             <div className="time">
-                              <b>{tl.from.name}</b>
+                              <Link
+                                className="link"
+                                to={`/user/${tl.from._id}`}
+                              >
+                                <b>{tl.from.name}</b>
+                              </Link>
                               <small style={{ marginLeft: "10px" }}>
                                 <CalculateTime
                                   current={new Date(moment().format())}
@@ -61,13 +122,9 @@ function Timeline() {
                                 />{" "}
                               </small>
                             </div>
-                            <p>How is it already 9:00? Just how??? 🤯🤯</p>
+                            <DisplayContent tl={tl} />
                           </Content>
-                          {tl.post ? (
-                            <img src={folder + tl.post.photo} />
-                          ) : (
-                            <img src={folder + tl.comment.post.photo} />
-                          )}
+                          <DisplayImage tl={tl} />
                         </ContentContainer>
                       </ComponentContainer>
                       {timeline.length !== index + 1 && <VL />}
@@ -119,6 +176,13 @@ const ContentContainer = styled.div`
     object-fit: contain;
     justify-content: flex-start;
   }
+`;
+
+const PostImage = styled.img`
+  height: auto;
+  max-height: 100px;
+  width: auto;
+  max-width: 100px;
 `;
 
 const Content = styled.div`

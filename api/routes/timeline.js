@@ -43,7 +43,16 @@ router.get("/", verify, async (req, res) => {
         tl = await tl.populate("from", "name username _id profilePic");
         tl = await tl.populate("post", "desc photo _id");
         tl = await tl.populate("comment", "comment _id post");
-        tl.comment = await tl.comment.populate("post", "desc photo _id");
+
+        if (typeof tl.comment !== "undefined") {
+          tl.comment = await tl.comment.populate("post", "desc photo _id userId");
+
+          if (typeof tl.comment.post !== "undefined")
+            tl.comment.post = await tl.comment.post.populate(
+              "userId",
+              "name username _id profilePic"
+            );
+        }
       })
     );
 

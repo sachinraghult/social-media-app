@@ -3,6 +3,7 @@ const User = require("../models/User");
 const Post = require("../models/Post");
 const verify = require("../middleware/verify");
 const Comment = require("../models/Comment");
+const Timeline = require("../models/Timeline");
 const axios = require("axios");
 const { update } = require("../models/User");
 
@@ -81,14 +82,18 @@ router.put("/like/:id", verify, async (req, res) => {
         { new: true }
       );
 
-      try {
-        await axios.post(
-          "http://localhost:5000/api/timeline",
-          { to: post.userId, post: post._id },
-          { headers: { authorization: req.header("authorization") } }
-        );
-      } catch (err) {
-        res.status(401).json("Cannot insert timeline");
+      const result = await Timeline.find({from: req.user._id, to: post.userId, post: post._id, comment: null});
+
+      if(result.length === 0) {
+        try {
+          await axios.post(
+            "http://localhost:5000/api/timeline",
+            { to: post.userId, post: post._id },
+            { headers: { authorization: req.header("authorization") } }
+          );
+        } catch (err) {
+          res.status(401).json("Cannot insert timeline");
+        }
       }
     }
 
