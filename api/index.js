@@ -9,6 +9,7 @@ const comment = require("./routes/comment");
 const timeline = require("./routes/timeline");
 const multer = require("multer");
 const path = require("path");
+const { nextTick } = require("process");
 
 const app = express();
 
@@ -26,11 +27,14 @@ mongoose
   .then(console.log("Connected to DB"))
   .catch((err) => console.log(err));
 
-app.use("/images", express.static(path.join(__dirname, "/images")));
+const uploadFunction = (req, res, next) => {
+  app.use(`/${req.params.type}`, express.static(path.join(__dirname, `/${req.params.type}`)));
+  next();
+};
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "images");
+    cb(null, `${req.params.type}`);
   },
   filename: (req, file, cb) => {
     cb(null, req.body.name);
@@ -38,9 +42,14 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-app.post("/api/upload", upload.single("file"), (req, res) => {
-  res.status(200).json("File has been uploaded");
-});
+app.post(
+  "/api/upload/:type",
+  uploadFunction,
+  upload.single("file"),
+  (req, res) => {
+    res.status(200).json("File has been uploaded");
+  }
+);
 
 app.use("/api/auth", auth);
 app.use("/api/post", post);

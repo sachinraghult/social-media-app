@@ -15,6 +15,14 @@ export default function Share({ recievedPostState }) {
   const [file, setFile] = useState();
   const [disable, setDisable] = useState(false);
 
+  const getURL = (data) => {
+    var binaryData = [];
+    binaryData.push(data);
+    return window.URL.createObjectURL(
+      new Blob(binaryData, { type: "video/*" })
+    );
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setDisable(true);
@@ -30,12 +38,13 @@ export default function Share({ recievedPostState }) {
       data.append("name", filename);
       data.append("file", file);
       newPost.photo = filename;
-
+      const type = file.type.split("/")[0];
+      
       try {
-        await axios.post("/upload", data);
+        await axios.post("/upload/" + type, data);
       } catch (err) {}
     }
-
+    console.log("new ", newPost)
     try {
       const post = await axios.post("/post", newPost, {
         headers: { authorization: authToken },
@@ -68,8 +77,16 @@ export default function Share({ recievedPostState }) {
             onChange={(e) => setDesc(e.target.value)}
           />
         </div>
-        {file && (
+        {file && file.type.split("/")[0] === "image" ? (
           <img className="postImg" src={URL.createObjectURL(file)} alt="" />
+        ) : (
+          <video
+            src={getURL(file)}
+            type="video/*"
+            width="320"
+            height="240"
+            controls
+          ></video>
         )}
         <hr className="shareHr" />
 
