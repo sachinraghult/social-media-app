@@ -43,7 +43,10 @@ function App() {
           path="/confirmDelete"
           element={user ? <ConfirmDelete /> : <Login />}
         />
-        <Route path="/post/:id" element={user ? <SinglePost /> : <Login />} />
+        <Route
+          path="/post/:id/:type"
+          element={user ? <SinglePost /> : <Login />}
+        />
         <Route
           path="/userfriends/:id"
           element={user ? <CheckUserFriends /> : <Login />}

@@ -4,6 +4,7 @@ const Post = require("../models/Post");
 const verify = require("../middleware/verify");
 const Comment = require("../models/Comment");
 const axios = require("axios");
+const { update } = require("../models/User");
 
 //CREATE
 router.post("/", verify, async (req, res) => {
@@ -42,6 +43,10 @@ router.put("/:id", verify, async (req, res) => {
       },
       { new: true }
     ).populate("userId", "name username _id profilePic");
+    updatedPost = await updatedPost.populate(
+      "likes",
+      "name username _id profilePic"
+    );
 
     res.status(200).json(updatedPost);
   } catch (err) {
@@ -87,7 +92,19 @@ router.put("/like/:id", verify, async (req, res) => {
       }
     }
 
-    res.status(200).json(updatedPost);
+    updatedPost = await updatedPost.populate(
+      "likes",
+      "name username _id profilePic"
+    );
+    updatedPost = await updatedPost.populate(
+      "userId",
+      "name username _id profilePic"
+    );
+
+    var comments = await Comment.find({ post: updatedPost._id, parent: null });
+    const response = { ...updatedPost._doc, size: comments.length };
+
+    res.status(200).json(response);
   } catch (err) {
     res.status(500).json("Cannot update");
   }
@@ -113,10 +130,12 @@ router.delete("/:id", verify, async (req, res) => {
 //GET POST
 router.get("/:id", verify, async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id).populate(
+    var post = await Post.findById(req.params.id).populate(
       "userId",
       "name username _id profilePic"
     );
+
+    post = await post.populate("likes", "name username _id profilePic");
 
     var comments = await Comment.find({ post: post._id, parent: null });
     const response = { ...post._doc, size: comments.length };
@@ -157,6 +176,7 @@ router.get("/", verify, async (req, res) => {
     var response = [];
     await Promise.all(
       posts.map(async (post) => {
+        await post.populate("likes", "name username _id profilePic");
         var comments = await Comment.find({ post: post._id, parent: null });
         response.push({ ...post._doc, size: comments.length });
       })

@@ -13,7 +13,7 @@ import styled from "styled-components";
 import moment from "moment";
 import CalculateTime from "../calculateTime/CalculateTime";
 
-export default function Post({ post, recievedPostsState }) {
+export default function Post({ post, recievedPostsState, recievedLikeState }) {
   const folder = "http://localhost:5000/images/";
 
   const { user, authToken } = useContext(Context);
@@ -34,6 +34,7 @@ export default function Post({ post, recievedPostsState }) {
         headers: { authorization: authToken },
       });
       setLike(res.data.likes);
+      recievedLikeState(res.data);
     } catch (err) {}
   };
 
@@ -194,13 +195,16 @@ export default function Post({ post, recievedPostsState }) {
                   alt=""
                 />
                 <span className="postLikeCounter">
-                  {like.length} people {like.includes(user._id) && "and you "}
-                  liked it
+                  <Link className="link" to={`/post/${post?._id}/likes`}>
+                    {like.length} people{" "}
+                    {like.some((like) => like._id === user._id) && "and you "}
+                    liked it
+                  </Link>
                 </span>
               </div>
               <div className="postBottomRight">
                 <span className="postCommentText">
-                  <Link className="link" to={`/post/${post?._id}`}>
+                  <Link className="link" to={`/post/${post?._id}/comments`}>
                     {post?.size} comments
                   </Link>
                 </span>

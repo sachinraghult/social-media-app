@@ -9,11 +9,13 @@ import { useEffect } from "react";
 import { Context } from "../../context/Context";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import DisplayLikes from "../../components/displayLikes/DisplayLikes";
 
 export default function SinglePost() {
   const location = useLocation();
   const navigate = useNavigate();
   const path = location.pathname.split("/")[2];
+  const type = location.pathname.split("/")[3];
 
   const { authToken } = useContext(Context);
 
@@ -45,7 +47,10 @@ export default function SinglePost() {
 
   const sendCommentsSize = (change) => {
     setPost({ ...post, size: post.size + change });
-    console.log(post.size);
+  };
+
+  const sendLikeState = (res) => {
+    setPost({ ...res });
   };
 
   return (
@@ -55,11 +60,21 @@ export default function SinglePost() {
         <Sidebar />
         <div className="SinglePostMainContainer">
           <div className="SinglePostContainer">
-            {post && <Post post={post} recievedPostsState={sendPostState} />}
+            {post && (
+              <Post
+                post={post}
+                recievedPostsState={sendPostState}
+                recievedLikeState={sendLikeState}
+              />
+            )}
           </div>
         </div>
         <div className="dummy">
-          <Comments recievedCommentsSize={sendCommentsSize} />
+          {type == "likes" && <DisplayLikes post={post} />}
+
+          {type == "comments" && (
+            <Comments recievedCommentsSize={sendCommentsSize} />
+          )}
         </div>
       </div>
     </>

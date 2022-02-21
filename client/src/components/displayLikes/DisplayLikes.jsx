@@ -7,39 +7,31 @@ import { useEffect } from "react";
 import axios from "../../axios";
 import { useLocation } from "react-router-dom";
 
-export default function DisplayLikes() {
+export default function DisplayLikes({ post }) {
   const location = useLocation();
   const path = location.pathname.split("/")[2];
   const folder = "http://localhost:5000/images/";
 
   const { authToken } = useContext(Context);
-
-  const [likes, setLikes] = useState([]);
-
-  useEffect(() => {
-    const getLikes = async () => {
-      try {
-        const res = await axios.get("/post/" + path, {
-          headers: { authorization: authToken },
-        });
-
-        setLikes(res.data.likes);
-      } catch (err) {}
-    };
-
-    getLikes();
-  }, []);
+  console.log("likes", post);
 
   return (
-    <div className="sidebar" style={{ marginTop: "50px", height: "700px" }}>
+    <div
+      className="sidebar"
+      style={{
+        marginTop: "50px",
+        height: "700px",
+        marginLeft: "10px",
+      }}
+    >
       <div className="sidebarWrapper">
         <div className="headingContainer">
           <span className="heading">Liked by</span>
           <hr className="sidebarHr" />
         </div>
         <ul className="sidebarFriendList">
-          {likes &&
-            likes.map((user) => (
+          {post &&
+            post.likes.map((user) => (
               <li className="sidebarCloseFriend">
                 <div>
                   <Link className="link" to={`/user/${user._id}`}>
