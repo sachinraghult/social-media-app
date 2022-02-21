@@ -14,7 +14,7 @@ li {
   padding: 0;
 }
 
-.container {
+.tlContainer {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -22,7 +22,7 @@ li {
   padding: 3rem 0;
 }
 
-.wrapper {
+.tlWrapper {
   background: #eaf6ff;
   padding: 2rem;
   border-radius: 15px;

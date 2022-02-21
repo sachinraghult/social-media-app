@@ -12,11 +12,16 @@ router.post("/", verify, async (req, res) => {
     if (!user) return res.status(404).json("Access Denied!");
 
     try {
-      const post = await Post.findById(req.body.post);
+      const post = await Post.findById(req.body.post).populate(
+        "userId",
+        "name username _id profilePic"
+      );
 
       var newComment;
       if (req.body.parentId.toString() !== "") {
-        const parentComment = await Comment.findById(req.body.parentId);
+        const parentComment = await Comment.findById(
+          req.body.parentId
+        ).populate("user", "name username _id profilePic");
 
         if (typeof parentComment.parent === "undefined") {
           newComment = new Comment({
@@ -25,6 +30,19 @@ router.post("/", verify, async (req, res) => {
             post: req.body.post,
             parent: req.body.parentId,
           });
+
+          try {
+            await axios.post(
+              "http://localhost:5000/api/timeline",
+              {
+                to: parentComment.user._id,
+                comment: parentComment._id,
+              },
+              { headers: { authorization: req.header("authorization") } }
+            );
+          } catch (err) {
+            res.status(401).json("Cannot insert timeline");
+          }
         } else {
           return res.status(401).json("Connot comment to a reply");
         }
@@ -34,20 +52,24 @@ router.post("/", verify, async (req, res) => {
           user: req.user._id,
           post: req.body.post,
         });
+
+        try {
+          await axios.post(
+            "http://localhost:5000/api/timeline",
+            {
+              to: post.userId._id,
+              post: newComment.post,
+              comment: newComment._id,
+            },
+            { headers: { authorization: req.header("authorization") } }
+          );
+        } catch (err) {
+          res.status(401).json("Cannot insert timeline");
+        }
       }
 
       var comment = await newComment.save();
       comment = await comment.populate("user", "name username _id profilePic");
-
-      try {
-        await axios.post(
-          "http://localhost:5000/api/timeline",
-          { to: comment.user, post: comment.post, comment: comment._id },
-          { headers: { authorization: req.header("authorization") } }
-        );
-      } catch (err) {
-        res.status(401).json("Cannot insert timeline");
-      }
 
       res.status(200).json(comment);
     } catch (err) {
