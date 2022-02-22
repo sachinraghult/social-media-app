@@ -253,7 +253,7 @@ export default function Settings() {
           </div>
           <div className="profileRightBottom">
             {/**Form */}
-            <div className="wrapper">
+            <div className="wrapper tlWrapper">
               <div className="login-box">
                 <h3 className="info-text">Update User Info</h3>
                 <form

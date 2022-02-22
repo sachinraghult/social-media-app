@@ -36,7 +36,7 @@ router.post("/", verify, async (req, res) => {
               "http://localhost:5000/api/timeline",
               {
                 to: parentComment.user._id,
-                comment: parentComment._id,
+                comment: newComment._id,
               },
               { headers: { authorization: req.header("authorization") } }
             );

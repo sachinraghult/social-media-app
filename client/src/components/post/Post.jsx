@@ -73,9 +73,9 @@ export default function Post({ post, recievedPostsState, recievedLikeState }) {
       const res = await axios.put("/post/" + post._id, editedPost, {
         headers: { authorization: authToken },
       });
-      console.log("res ", res);
       recievedPostsState(post._id, { type: "edit", res: res });
       setDisable(false);
+      setEditedFile(null);
       setEdit(false);
     } catch (err) {
       setEdit(false);
@@ -241,7 +241,6 @@ export default function Post({ post, recievedPostsState, recievedLikeState }) {
                 className="shareProfileImg"
                 src={folder + user.profilePic}
                 alt=""
-                required
               />
               <input
                 placeholder="Have your say.."
@@ -249,6 +248,7 @@ export default function Post({ post, recievedPostsState, recievedLikeState }) {
                 defaultValue={post?.desc}
                 autoFocus={true}
                 onChange={(e) => setDesc(e.target.value)}
+                required
               />
             </div>
             {!editedfile ? (
@@ -299,6 +299,7 @@ export default function Post({ post, recievedPostsState, recievedLikeState }) {
                   accept="image/*, video/*"
                   style={{ display: "none" }}
                   onChange={(e) => setEditedFile(e.target.files[0])}
+                  required
                 />
               </div>
               <button
@@ -307,7 +308,7 @@ export default function Post({ post, recievedPostsState, recievedLikeState }) {
                 className="shareButton"
                 disabled={disable}
               >
-                Post
+                {disable ? "Updating..." : "Post"}
               </button>
               <button
                 type="button"

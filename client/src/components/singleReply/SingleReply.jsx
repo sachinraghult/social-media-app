@@ -14,6 +14,7 @@ function SingleReply({ reply, recievedRepliesState }) {
 
   const { user, authToken } = useContext(Context);
 
+  const [disable, setDisable] = useState(false);
   const [like, setLike] = useState(0);
   const [edit, setEdit] = useState(false);
   const [editedReply, setEditedReply] = useState(reply.comment);
@@ -32,6 +33,7 @@ function SingleReply({ reply, recievedRepliesState }) {
   };
 
   const handleEdit = async (e) => {
+    setDisable(true);
     e.preventDefault();
     setEdit(true);
 
@@ -47,15 +49,18 @@ function SingleReply({ reply, recievedRepliesState }) {
       recievedRepliesState(reply._id, { type: "edit", res: res });
       setEdit(false);
     } catch (err) {}
+    setDisable(false);
   };
 
   const handleDelete = async () => {
+    setDisable(true);
     try {
       const res = await axios.delete("/comment/" + reply._id, {
         headers: { authorization: authToken },
       });
       recievedRepliesState(reply._id, { type: "delete", res: res });
     } catch (err) {}
+    setDisable(false);
   };
 
   return (
@@ -76,7 +81,12 @@ function SingleReply({ reply, recievedRepliesState }) {
         {/*Form */}
         <form onSubmit={handleEdit}>
           {!edit ? (
-            <p style={{ marginLeft: "20px" }}>{reply.comment}</p>
+            <p
+              className="displayReply"
+              style={{ marginLeft: "20px", marginRight: "15px" }}
+            >
+              {reply.comment}
+            </p>
           ) : (
             <textarea
               style={{ marginLeft: "20px" }}
@@ -118,6 +128,7 @@ function SingleReply({ reply, recievedRepliesState }) {
                     className="like pull-right"
                     style={{ color: "red", marginRight: "15px" }}
                     onClick={handleDelete}
+                    disabled={disable}
                   >
                     Delete🗑️
                   </a>
@@ -147,6 +158,7 @@ function SingleReply({ reply, recievedRepliesState }) {
                 type="submit"
                 className="like pull-right editBtn"
                 style={{ color: "green", marginRight: "15px" }}
+                disabled={disable}
               >
                 Edit✒️
               </button>

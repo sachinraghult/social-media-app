@@ -44,7 +44,6 @@ export default function Share({ recievedPostState }) {
         await axios.post("/upload/" + type, data);
       } catch (err) {}
     }
-    console.log("new ", newPost);
     try {
       const post = await axios.post("/post", newPost, {
         headers: { authorization: authToken },
@@ -56,6 +55,7 @@ export default function Share({ recievedPostState }) {
       e.target.reset();
       setDisable(false);
       setFile(null);
+      setDesc(null);
     } catch (err) {
       setDisable(false);
     }
@@ -69,12 +69,12 @@ export default function Share({ recievedPostState }) {
             className="shareProfileImg"
             src={folder + user.profilePic}
             alt=""
-            required
           />
           <input
             placeholder="Have your say.."
             className="shareInput"
             onChange={(e) => setDesc(e.target.value)}
+            required
           />
         </div>
         {file &&
@@ -110,7 +110,7 @@ export default function Share({ recievedPostState }) {
             />
           </div>
           <button type="submit" className="shareButton" disabled={disable}>
-            Share
+            {disable ? "Uploading..." : "Share"}
           </button>
         </div>
       </form>

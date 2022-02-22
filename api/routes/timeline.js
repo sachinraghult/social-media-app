@@ -44,10 +44,13 @@ router.get("/", verify, async (req, res) => {
         tl = await tl.populate("post", "desc photo _id");
         tl = await tl.populate("comment", "comment _id post");
 
-        if (typeof tl.comment !== "undefined") {
-          tl.comment = await tl.comment.populate("post", "desc photo _id userId");
+        if (typeof tl?.comment !== "undefined") {
+          tl.comment = await tl.comment.populate(
+            "post",
+            "desc photo _id userId"
+          );
 
-          if (typeof tl.comment.post !== "undefined")
+          if (typeof tl.comment?.post !== "undefined")
             tl.comment.post = await tl.comment.post.populate(
               "userId",
               "name username _id profilePic"
@@ -55,9 +58,9 @@ router.get("/", verify, async (req, res) => {
         }
       })
     );
-
     res.status(200).json(timeline);
   } catch (err) {
+    console.log(err);
     res.status(500).json("Cannot get timeline");
   }
 });

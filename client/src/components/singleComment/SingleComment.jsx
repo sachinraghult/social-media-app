@@ -20,6 +20,8 @@ function SingleComment({
 
   const { user, authToken } = useContext(Context);
 
+  const [disable, setDisable] = useState(false);
+
   const [like, setLike] = useState(0);
   const [display, setDisplay] = useState("none");
   const [boxdisplay, setBoxDisplay] = useState("none");
@@ -70,6 +72,7 @@ function SingleComment({
   };
 
   const handleEdit = async (e) => {
+    setDisable(true);
     e.preventDefault();
     setEdit(true);
 
@@ -85,9 +88,11 @@ function SingleComment({
       recievedCommentsState(comment._id, { type: "edit", res: res });
       setEdit(false);
     } catch (err) {}
+    setDisable(false);
   };
 
   const handleDelete = async () => {
+    setDisable(true);
     try {
       const res = await axios.delete("/comment/" + comment._id, {
         headers: { authorization: authToken },
@@ -95,9 +100,11 @@ function SingleComment({
       recievedCommentsState(comment._id, { type: "delete", res: res });
       recievedCommentsSize(-1);
     } catch (err) {}
+    setDisable(false);
   };
 
   const handleSubmit = async (e) => {
+    setDisable(true);
     e.preventDefault();
 
     try {
@@ -115,8 +122,10 @@ function SingleComment({
       setReplies([res.data, ...replies]);
       setBoxDisplay("none");
       setDisplay("block");
+      setDesc(null);
       e.target.reset();
     } catch (err) {}
+    setDisable(false);
   };
 
   return (
@@ -150,6 +159,7 @@ function SingleComment({
                   className="writeInput"
                   autoFocus={true}
                   onChange={(e) => setEditedComment(e.target.value)}
+                  required
                 />
               )}
 
@@ -195,6 +205,7 @@ function SingleComment({
                         className="like pull-right"
                         style={{ color: "red" }}
                         onClick={handleDelete}
+                        disabled={disable}
                       >
                         Delete🗑️
                       </a>
@@ -224,6 +235,7 @@ function SingleComment({
                     type="submit"
                     className="like pull-right editBtn"
                     style={{ color: "green", marginRight: "15px" }}
+                    disabled={disable}
                   >
                     Edit✒️
                   </button>
@@ -254,7 +266,9 @@ function SingleComment({
                         referrerPolicy="no-referrer"
                       />
                     </span>
-                    <button type="submit">Post</button>
+                    <button type="submit" disabled={disable}>
+                      Post
+                    </button>
                   </div>
                 </div>
               </form>

@@ -18,6 +18,7 @@ function Comments({ recievedCommentsSize }) {
 
   const [main, setMain] = useState([]);
   const [desc, setDesc] = useState("");
+  const [disable, setDisable] = useState(false);
 
   const sendCommentsState = (id, action) => {
     if (action.type === "edit") {
@@ -49,6 +50,7 @@ function Comments({ recievedCommentsSize }) {
   }, []);
 
   const handleSubmit = async (e) => {
+    setDisable(true);
     e.preventDefault();
 
     try {
@@ -66,8 +68,11 @@ function Comments({ recievedCommentsSize }) {
 
       setMain([res.data, ...main]);
       recievedCommentsSize(1);
+      setDesc(null);
       e.target.reset();
     } catch (err) {}
+
+    setDisable(false);
   };
 
   return (
@@ -89,6 +94,7 @@ function Comments({ recievedCommentsSize }) {
                 className="commentar"
                 placeholder="Add a comment..."
                 onChange={(e) => setDesc(e.target.value)}
+                required
               ></textarea>
               <div className="box_post">
                 <div className="pull-right">
@@ -99,7 +105,9 @@ function Comments({ recievedCommentsSize }) {
                       referrerPolicy="no-referrer"
                     />
                   </span>
-                  <button type="submit">Post</button>
+                  <button type="submit" disabled={disable}>
+                    Post
+                  </button>
                 </div>
               </div>
             </div>

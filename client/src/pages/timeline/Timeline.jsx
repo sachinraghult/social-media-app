@@ -97,37 +97,41 @@ function Timeline() {
                 {timeline &&
                   timeline.map((tl, index) => (
                     <>
-                      <ComponentContainer>
-                        <Link className="link" to={`/user/${tl.from._id}`}>
-                          <img
-                            src={folder + tl.from.profilePic}
-                            referrerPolicy="no-referrer"
-                          />
-                        </Link>
-                        <ContentContainer>
-                          <Content>
-                            <div className="time">
-                              <Link
-                                className="link"
-                                to={`/user/${tl.from._id}`}
-                              >
-                                <b>{tl.from.name}</b>
-                              </Link>
-                              <small style={{ marginLeft: "10px" }}>
-                                <CalculateTime
-                                  current={new Date(moment().format())}
-                                  previous={
-                                    new Date(moment(tl.createdAt).format())
-                                  }
-                                />{" "}
-                              </small>
-                            </div>
-                            <DisplayContent tl={tl} />
-                          </Content>
-                          <DisplayImage tl={tl} />
-                        </ContentContainer>
-                      </ComponentContainer>
-                      {timeline.length !== index + 1 && <VL />}
+                      {tl.from._id.toString() !== tl.to.toString() && (
+                        <>
+                          <ComponentContainer>
+                            <Link className="link" to={`/user/${tl.from._id}`}>
+                              <img
+                                src={folder + tl.from.profilePic}
+                                referrerPolicy="no-referrer"
+                              />
+                            </Link>
+                            <ContentContainer>
+                              <Content>
+                                <div className="time">
+                                  <Link
+                                    className="link"
+                                    to={`/user/${tl.from._id}`}
+                                  >
+                                    <b>{tl.from.name}</b>
+                                  </Link>
+                                  <small style={{ marginLeft: "10px" }}>
+                                    <CalculateTime
+                                      current={new Date(moment().format())}
+                                      previous={
+                                        new Date(moment(tl.createdAt).format())
+                                      }
+                                    />{" "}
+                                  </small>
+                                </div>
+                                <DisplayContent tl={tl} />
+                              </Content>
+                              <DisplayImage tl={tl} />
+                            </ContentContainer>
+                          </ComponentContainer>
+                          {timeline.length !== index + 1 && <VL />}
+                        </>
+                      )}
                     </>
                   ))}
               </ul>
