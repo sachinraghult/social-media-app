@@ -50,7 +50,7 @@ export default function Video({ src }) {
     var isMuted = videojs(e.target.id).player().muted();
     if ((localStorage.getItem("muted") === "true") !== isMuted) {
       localStorage.setItem("muted", isMuted);
-      var videos = document.querySelectorAll('[id^="video"]');
+      var videos = document.querySelectorAll('video[id^="video"]');
       [...videos].map((video) => videojs(video.id).player().muted(isMuted));
     }
   };
