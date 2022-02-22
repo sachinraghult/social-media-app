@@ -1,8 +1,27 @@
 import React, { useEffect, useRef } from "react";
+import videojs from "video.js";
+import "video.js/dist/video-js.css";
 import "./Video.css";
 
 export default function Video({ src }) {
-  const videoRef = useRef(null);
+  const videoPlayerRef = useRef(null);
+
+  const videoJSOptions = {
+    muted: false,
+    autoplay: false,
+    controls: true,
+    loop: true,
+  };
+
+  useEffect(() => {
+    if (videoPlayerRef) {
+      const player = videojs(videoPlayerRef.current, videoJSOptions, () => {
+        player.src(src);
+      });
+    }
+
+    return () => {};
+  });
 
   useEffect(() => {
     let options = {
@@ -13,33 +32,25 @@ export default function Video({ src }) {
     let handlePlay = (entries, observer) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          videoRef.current.play();
+          videoPlayerRef.current.play();
         } else {
-          videoRef.current.pause();
+          videoPlayerRef.current.pause();
         }
       });
     };
 
     let observer = new IntersectionObserver(handlePlay, options);
 
-    observer.observe(videoRef.current);
+    observer.observe(videoPlayerRef.current);
   });
 
   return (
-    <div className="App">
-      <h1>Scroll Down</h1>
-      <div className="container">
-        <div className="video-container">
-          <video
-            id="my-video"
-            class="video-js"
-            controls
-            preload="metadata"
-            ref={videoRef}
-            src="https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4"
-          ></video>
-        </div>
-      </div>
-    </div>
+    <video
+      id={Date.now().toString()}
+      ref={videoPlayerRef}
+      className="video-js postVid "
+      preload="metadata"
+      controls
+    />
   );
 }

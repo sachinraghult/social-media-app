@@ -1,6 +1,26 @@
-.container {
-  height: 500vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.postVid {
+  margin-top: 20px;
+  width: 100%;
+  max-height: 500px;
+  object-fit: contain;
+}
+
+.video-js.vjs-mouse .vjs-big-play-button:before {
+  font-size: 1.5em;
+  color: white;
+  opacity: 0.9;
+  margin-top: -2.5%;
+  margin-left: -2.5%;
+}
+
+.video-js.vjs-mouse .vjs-big-play-button {
+  background-color: #f3951d;
+  opacity: 0.8;
+  width: 150px;
+  height: 100px;
+  border-radius: 10%;
+  border-style: solid;
+  border-width: 4px;
+  border-color: #ffffff;
+  margin-left: -11%;
 }

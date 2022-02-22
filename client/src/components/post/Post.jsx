@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import styled from "styled-components";
 import moment from "moment";
 import CalculateTime from "../calculateTime/CalculateTime";
+import Video from "../video/Video";
 
 export default function Post({ post, recievedPostsState, recievedLikeState }) {
   const folder = "http://localhost:5000/image/";
@@ -188,14 +189,7 @@ export default function Post({ post, recievedPostsState, recievedLikeState }) {
             <div className="postCenter">
               <span className="postText">{post?.desc}</span>
               {/\.(mp4|ogg|webm)$/i.test(post?.photo) ? (
-                <video
-                  className="postImg"
-                  src={folder1 + post?.photo}
-                  type="video/*"
-                  width="320"
-                  height="240"
-                  controls
-                ></video>
+                <Video src={folder1 + post?.photo} />
               ) : (
                 <img className="postImg" src={folder + post?.photo} alt="" />
               )}
