@@ -76,7 +76,7 @@ function Comments({ recievedCommentsSize }) {
   };
 
   return (
-    <div className="container">
+    <div className="container3">
       <div className="col-md-12" id="fbcomment">
         <div className="header_comment">
           <div className="row">

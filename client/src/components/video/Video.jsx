@@ -30,13 +30,15 @@ export default function Video({ src }) {
     };
 
     let handlePlay = (entries, observer) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          videoPlayerRef.current.play();
-        } else {
-          videoPlayerRef.current.pause();
-        }
-      });
+      try {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            videoPlayerRef.current.play();
+          } else {
+            videoPlayerRef.current.pause();
+          }
+        });
+      } catch (err) {}
     };
 
     let observer = new IntersectionObserver(handlePlay, options);
@@ -48,7 +50,7 @@ export default function Video({ src }) {
     <video
       id={Date.now().toString()}
       ref={videoPlayerRef}
-      className="video-js postVid "
+      className="video-js postVid vjs-big-play-button vjs-sublime-skin "
       preload="metadata"
       controls
     />

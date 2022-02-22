@@ -12,6 +12,8 @@ import ConfirmDelete from "./pages/confirmDelete/ConfirmDelete";
 import Friends from "./pages/friends/Friends";
 import UserProfile from "./pages/userProfile/UserProfile";
 import UserFriends from "./pages/userFriends/UserFriends";
+import Reels from "./pages/reels/Reels";
+import Grid from "./pages/grid/Grid";
 
 function App() {
   const { user, authToken } = useContext(Context);
@@ -51,6 +53,9 @@ function App() {
           path="/userfriends/:id"
           element={user ? <CheckUserFriends /> : <Login />}
         />
+
+        <Route path="/reels" element={user ? <Reels /> : <Login />} />
+        <Route path="/grid" element={user ? <Grid /> : <Login />} />
       </Routes>
     </BrowserRouter>
   );

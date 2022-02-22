@@ -9,9 +9,11 @@ import { Context } from "../../context/Context";
 import axios from "../../axios";
 import moment from "moment";
 import CalculateTime from "../../components/calculateTime/CalculateTime";
+import Video from "../../components/video/Video";
 
 function Timeline() {
   const folder = "http://localhost:5000/image/";
+  const folder1 = "http://localhost:5000/video/";
 
   const { authToken } = useContext(Context);
   const [timeline, setTimeline] = useState();
@@ -70,13 +72,29 @@ function Timeline() {
     if (tl?.comment) {
       return (
         <Link className="link" to={`/post/${tl.comment.post._id}/comments`}>
-          <PostImage src={folder + tl?.comment.post.photo} />
+          {/\.(mp4|ogg|webm)$/i.test(tl?.post.photo) ? (
+            <PostImage src="https://www.pinpng.com/pngs/m/120-1204737_play-start-video-film-arrow-media-multimedia-blue.png" />
+          ) : (
+            <PostImage
+              className="postImg"
+              src={folder + tl?.comment.post.photo}
+              alt=""
+            />
+          )}
         </Link>
       );
     } else if (tl?.post) {
       return (
         <Link className="link" to={`/post/${tl.post._id}/likes`}>
-          <PostImage src={folder + tl?.post.photo} />
+          {/\.(mp4|ogg|webm)$/i.test(tl?.post.photo) ? (
+            <PostImage src="https://www.pinpng.com/pngs/m/120-1204737_play-start-video-film-arrow-media-multimedia-blue.png" />
+          ) : (
+            <PostImage
+              className="postImg"
+              src={folder + tl?.post.photo}
+              alt=""
+            />
+          )}
         </Link>
       );
     } else {
