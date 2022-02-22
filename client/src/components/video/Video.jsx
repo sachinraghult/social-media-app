@@ -3,7 +3,8 @@ import videojs from "video.js";
 import "video.js/dist/video-js.css";
 import "./Video.css";
 
-export default function Video({ src }) {
+export default function Video({ src, reels }) {
+  console.log(src);
   const videoPlayerRef = useRef(null);
 
   const videoJSOptions = {
@@ -24,26 +25,28 @@ export default function Video({ src }) {
   });
 
   useEffect(() => {
-    let options = {
-      rootMargin: "0px",
-      threshold: [0.25, 0.75],
-    };
+    if (!reels) {
+      let options = {
+        rootMargin: "0px",
+        threshold: [0.25, 0.75],
+      };
 
-    let handlePlay = (entries, observer) => {
-      try {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            videoPlayerRef.current.play();
-          } else {
-            videoPlayerRef.current.pause();
-          }
-        });
-      } catch (err) {}
-    };
+      let handlePlay = (entries, observer) => {
+        try {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              videoPlayerRef.current.play();
+            } else {
+              videoPlayerRef.current.pause();
+            }
+          });
+        } catch (err) {}
+      };
 
-    let observer = new IntersectionObserver(handlePlay, options);
+      let observer = new IntersectionObserver(handlePlay, options);
 
-    observer.observe(videoPlayerRef.current);
+      observer.observe(videoPlayerRef.current);
+    }
   });
 
   const handleMute = (e) => {
@@ -57,7 +60,7 @@ export default function Video({ src }) {
 
   return (
     <video
-      id={"video" + Date.now().toString()}
+      id={"video" + Math.floor(Math.random() * 100000)}
       ref={videoPlayerRef}
       className="video-js postVid  vjs-big-play-button vjs-sublime-skin "
       preload="metadata"

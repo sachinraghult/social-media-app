@@ -36,14 +36,14 @@ export default function Home() {
       <div className="homeContainer">
         <Sidebar />
         <div style={{ flex: "10" }}>
-          <div className="user-name">Reels</div>
+          <div className="user-name">{user.name}'s Grid</div>
           <div className="container1">
             <div className="gallery">
               {posts &&
                 posts.map((post) => (
                   <div className="gallery-item" tabindex="0">
                     {/\.(mp4|ogg|webm)$/i.test(post?.photo) ? (
-                      <Video src={folder1 + post.photo} />
+                      <Video src={folder1 + post.photo} reels={true} />
                     ) : (
                       <>
                         <Link

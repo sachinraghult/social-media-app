@@ -45,7 +45,7 @@ export default function Home() {
               {posts &&
                 posts.map((post) => (
                   <div class="gallery-item" tabindex="0">
-                    <Video src={folder1 + post.photo} />
+                    <Video src={folder1 + post.photo} reels={true} />
                   </div>
                 ))}
               {posts.length % 3 !== 0 &&
