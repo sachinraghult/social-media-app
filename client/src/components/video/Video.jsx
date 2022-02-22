@@ -7,7 +7,7 @@ export default function Video({ src }) {
   const videoPlayerRef = useRef(null);
 
   const videoJSOptions = {
-    muted: false,
+    muted: localStorage.getItem("muted") === "true",
     autoplay: false,
     controls: true,
     loop: true,
@@ -46,13 +46,23 @@ export default function Video({ src }) {
     observer.observe(videoPlayerRef.current);
   });
 
+  const handleMute = (e) => {
+    var isMuted = videojs(e.target.id).player().muted();
+    if ((localStorage.getItem("muted") === "true") !== isMuted) {
+      localStorage.setItem("muted", isMuted);
+      var videos = document.querySelectorAll('[id^="video"]');
+      [...videos].map((video) => videojs(video.id).player().muted(isMuted));
+    }
+  };
+
   return (
     <video
-      id={Date.now().toString()}
+      id={"video" + Date.now().toString()}
       ref={videoPlayerRef}
-      className="video-js postVid vjs-big-play-button vjs-sublime-skin "
+      className="video-js postVid  vjs-big-play-button vjs-sublime-skin "
       preload="metadata"
       controls
+      onVolumeChange={(e) => handleMute(e)}
     />
   );
 }
