@@ -32,7 +32,7 @@ router.post("/", verify, async (req, res) => {
 router.put("/:id", verify, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
-    
+
     if (!post) return res.status(404).json("Post not found!");
     if (post.userId.toString() !== req.user._id)
       return res.status(401).json("Access Denied!");
@@ -84,9 +84,14 @@ router.put("/like/:id", verify, async (req, res) => {
         { new: true }
       );
 
-      const result = await Timeline.find({from: req.user._id, to: post.userId, post: post._id, comment: null});
+      const result = await Timeline.find({
+        from: req.user._id,
+        to: post.userId,
+        post: post._id,
+        comment: null,
+      });
 
-      if(result.length === 0) {
+      if (result.length === 0) {
         try {
           await axios.post(
             "http://localhost:5000/api/timeline",
@@ -126,6 +131,7 @@ router.delete("/:id", verify, async (req, res) => {
     if (post.userId.toString() !== req.user._id)
       return res.status(401).json("Access Denied!");
 
+    await Timeline.deleteMany({ post: post._id });
     await Comment.deleteMany({ post: post._id });
     await post.delete();
     res.status(200).json("Post has been deleted!");

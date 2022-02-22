@@ -3,6 +3,7 @@ const Comment = require("../models/Comment");
 const User = require("../models/User");
 const Post = require("../models/Post");
 const verify = require("../middleware/verify");
+const Timeline = require("../models/Timeline");
 const axios = require("axios");
 
 //ADD COMMENT
@@ -156,6 +157,8 @@ router.delete("/:id", verify, async (req, res) => {
     await Comment.deleteMany({ parent: comment._id }).catch((err) =>
       res.status(404).json("Cannot find any reply")
     );
+
+    await Timeline.deleteMany({ comment: comment._id });
 
     await comment.delete();
 

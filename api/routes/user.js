@@ -40,7 +40,7 @@ router.put("/follow", verify, async (req, res) => {
 
     let to = await User.findById(req.query.followers);
     if (!to) return res.status(404).json("User not found!");
-    
+
     if (to.followers.includes(from._id))
       return res.status(404).json("Follower already exist!");
 
@@ -62,6 +62,13 @@ router.put("/follow", verify, async (req, res) => {
     const { password, ...others } = updatedFrom._doc;
 
     try {
+      await Timeline.deleteMany({
+        from: req.user._id,
+        to: to._id,
+        post: null,
+        comment: null,
+      });
+
       await axios.post(
         "http://localhost:5000/api/timeline",
         { to: req.query.followers },
