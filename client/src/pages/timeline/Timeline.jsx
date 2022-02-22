@@ -11,7 +11,7 @@ import moment from "moment";
 import CalculateTime from "../../components/calculateTime/CalculateTime";
 
 function Timeline() {
-  const folder = "http://localhost:5000/images/";
+  const folder = "http://localhost:5000/image/";
 
   const { authToken } = useContext(Context);
   const [timeline, setTimeline] = useState();

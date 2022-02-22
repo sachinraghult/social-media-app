@@ -13,7 +13,7 @@ export default function UserFriends() {
   const location = useLocation();
   const path = location.pathname.split("/")[2];
 
-  const folder = "http://localhost:5000/images/";
+  const folder = "http://localhost:5000/image/";
 
   const { user, authToken } = useContext(Context);
 

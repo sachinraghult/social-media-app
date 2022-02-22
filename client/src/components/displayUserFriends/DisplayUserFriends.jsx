@@ -10,7 +10,7 @@ import axios from "../../axios";
 import { UpdateSuccess } from "../../context/Actions";
 
 export default function DisplayFriends({ type, userProfile }) {
-  const folder = "http://localhost:5000/images/";
+  const folder = "http://localhost:5000/image/";
 
   const { user, authToken, dispatch } = useContext(Context);
 

@@ -7,7 +7,7 @@ import { Context } from "../../context/Context";
 import { useState } from "react";
 
 export default function Share({ recievedPostState }) {
-  const folder = "http://localhost:5000/images/";
+  const folder = "http://localhost:5000/image/";
 
   const { user, authToken } = useContext(Context);
 
@@ -39,12 +39,12 @@ export default function Share({ recievedPostState }) {
       data.append("file", file);
       newPost.photo = filename;
       const type = file.type.split("/")[0];
-      
+
       try {
         await axios.post("/upload/" + type, data);
       } catch (err) {}
     }
-    console.log("new ", newPost)
+    console.log("new ", newPost);
     try {
       const post = await axios.post("/post", newPost, {
         headers: { authorization: authToken },
@@ -77,17 +77,19 @@ export default function Share({ recievedPostState }) {
             onChange={(e) => setDesc(e.target.value)}
           />
         </div>
-        {file && file.type.split("/")[0] === "image" ? (
-          <img className="postImg" src={URL.createObjectURL(file)} alt="" />
-        ) : (
-          <video
-            src={getURL(file)}
-            type="video/*"
-            width="320"
-            height="240"
-            controls
-          ></video>
-        )}
+        {file &&
+          (file.type.split("/")[0] === "image" ? (
+            <img className="postImg" src={URL.createObjectURL(file)} alt="" />
+          ) : (
+            <video
+              className="postImg"
+              src={getURL(file)}
+              type="video/*"
+              width="320"
+              height="240"
+              controls
+            ></video>
+          ))}
         <hr className="shareHr" />
 
         <div className="shareBottom">

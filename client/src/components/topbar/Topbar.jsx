@@ -6,7 +6,7 @@ import { Logout } from "../../context/Actions";
 import { Search, Person, Chat, Notifications } from "@material-ui/icons";
 
 export default function Topbar() {
-  const folder = "http://localhost:5000/images/";
+  const folder = "http://localhost:5000/image/";
 
   const { user, dispatch } = useContext(Context);
 

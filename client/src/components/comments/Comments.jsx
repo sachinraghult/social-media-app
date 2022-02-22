@@ -9,7 +9,7 @@ import { Context } from "../../context/Context";
 import { useState } from "react";
 
 function Comments({ recievedCommentsSize }) {
-  const folder = "http://localhost:5000/images/";
+  const folder = "http://localhost:5000/image/";
 
   const location = useLocation();
   const path = location.pathname.split("/")[2];

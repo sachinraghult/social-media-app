@@ -11,7 +11,7 @@ import axios from "../../axios";
 import { UpdateSuccess } from "../../context/Actions";
 
 export default function UserProfile() {
-  const folder = "http://localhost:5000/images/";
+  const folder = "http://localhost:5000/image/";
 
   const location = useLocation();
   const path = location.pathname.split("/")[2];

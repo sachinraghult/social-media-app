@@ -27,10 +27,8 @@ mongoose
   .then(console.log("Connected to DB"))
   .catch((err) => console.log(err));
 
-const uploadFunction = (req, res, next) => {
-  app.use(`/${req.params.type}`, express.static(path.join(__dirname, `/${req.params.type}`)));
-  next();
-};
+  app.use("/video", express.static(path.join(__dirname, "/video")));
+  app.use("/image", express.static(path.join(__dirname, "/image")));
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -44,7 +42,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 app.post(
   "/api/upload/:type",
-  uploadFunction,
   upload.single("file"),
   (req, res) => {
     res.status(200).json("File has been uploaded");

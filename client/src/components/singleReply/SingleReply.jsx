@@ -10,7 +10,7 @@ import CalculateTime from "../calculateTime/CalculateTime";
 import moment from "moment";
 
 function SingleReply({ reply, recievedRepliesState }) {
-  const folder = "http://localhost:5000/images/";
+  const folder = "http://localhost:5000/image/";
 
   const { user, authToken } = useContext(Context);
 

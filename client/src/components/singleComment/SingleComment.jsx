@@ -13,7 +13,7 @@ function SingleComment({
   recievedCommentsState,
   recievedCommentsSize,
 }) {
-  const folder = "http://localhost:5000/images/";
+  const folder = "http://localhost:5000/image/";
 
   const location = useLocation();
   const path = location.pathname.split("/")[2];

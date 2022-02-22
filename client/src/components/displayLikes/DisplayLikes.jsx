@@ -10,7 +10,7 @@ import { useLocation } from "react-router-dom";
 export default function DisplayLikes({ post }) {
   const location = useLocation();
   const path = location.pathname.split("/")[2];
-  const folder = "http://localhost:5000/images/";
+  const folder = "http://localhost:5000/image/";
 
   const { authToken } = useContext(Context);
   console.log("likes", post);

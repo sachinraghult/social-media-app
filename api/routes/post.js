@@ -32,11 +32,12 @@ router.post("/", verify, async (req, res) => {
 router.put("/:id", verify, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
+    
     if (!post) return res.status(404).json("Post not found!");
     if (post.userId.toString() !== req.user._id)
       return res.status(401).json("Access Denied!");
 
-    const updatedPost = await Post.findByIdAndUpdate(
+    var updatedPost = await Post.findByIdAndUpdate(
       req.params.id,
       {
         $set: req.body,
@@ -44,6 +45,7 @@ router.put("/:id", verify, async (req, res) => {
       },
       { new: true }
     ).populate("userId", "name username _id profilePic");
+
     updatedPost = await updatedPost.populate(
       "likes",
       "name username _id profilePic"

@@ -14,7 +14,8 @@ import moment from "moment";
 import CalculateTime from "../calculateTime/CalculateTime";
 
 export default function Post({ post, recievedPostsState, recievedLikeState }) {
-  const folder = "http://localhost:5000/images/";
+  const folder = "http://localhost:5000/image/";
+  const folder1 = "http://localhost:5000/video/";
 
   const { user, authToken } = useContext(Context);
 
@@ -38,6 +39,14 @@ export default function Post({ post, recievedPostsState, recievedLikeState }) {
     } catch (err) {}
   };
 
+  const getURL = (data) => {
+    var binaryData = [];
+    binaryData.push(data);
+    return window.URL.createObjectURL(
+      new Blob(binaryData, { type: "video/*" })
+    );
+  };
+
   const handleEdit = async (e) => {
     setAnchorEl(null);
     e.preventDefault();
@@ -53,9 +62,10 @@ export default function Post({ post, recievedPostsState, recievedLikeState }) {
       data.append("name", filename);
       data.append("file", editedfile);
       editedPost.photo = filename;
+      const type = editedfile.type.split("/")[0];
 
       try {
-        await axios.post("/upload", data);
+        await axios.post("/upload/" + type, data);
       } catch (err) {}
     }
 
@@ -63,7 +73,7 @@ export default function Post({ post, recievedPostsState, recievedLikeState }) {
       const res = await axios.put("/post/" + post._id, editedPost, {
         headers: { authorization: authToken },
       });
-
+      console.log("res ", res);
       recievedPostsState(post._id, { type: "edit", res: res });
       setDisable(false);
       setEdit(false);
@@ -177,7 +187,18 @@ export default function Post({ post, recievedPostsState, recievedLikeState }) {
             </div>
             <div className="postCenter">
               <span className="postText">{post?.desc}</span>
-              <img className="postImg" src={folder + post?.photo} alt="" />
+              {/\.(mp4|ogg|webm)$/i.test(post?.photo) ? (
+                <video
+                  className="postImg"
+                  src={folder1 + post?.photo}
+                  type="video/*"
+                  width="320"
+                  height="240"
+                  controls
+                ></video>
+              ) : (
+                <img className="postImg" src={folder + post?.photo} alt="" />
+              )}
             </div>
             <div className="postBottom">
               <div className="postBottomLeft">
@@ -231,13 +252,36 @@ export default function Post({ post, recievedPostsState, recievedLikeState }) {
               />
             </div>
             {!editedfile ? (
-              <img className="postImg" src={folder + post?.photo} alt="" />
+              /\.(mp4|ogg|webm)$/i.test(post?.photo) ? (
+                <video
+                  className="postImg"
+                  src={folder1 + post?.photo}
+                  type="video/*"
+                  width="320"
+                  height="240"
+                  controls
+                ></video>
+              ) : (
+                <img className="postImg" src={folder + post?.photo} alt="" />
+              )
             ) : (
-              <img
-                className="postImg"
-                src={URL.createObjectURL(editedfile)}
-                alt=""
-              />
+              editedfile &&
+              (editedfile.type.split("/")[0] === "image" ? (
+                <img
+                  className="postImg"
+                  src={URL.createObjectURL(editedfile)}
+                  alt=""
+                />
+              ) : (
+                <video
+                  className="postImg"
+                  src={getURL(editedfile)}
+                  type="video/*"
+                  width="320"
+                  height="240"
+                  controls
+                ></video>
+              ))
             )}
             <hr className="shareHr" />
 

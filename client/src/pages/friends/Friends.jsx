@@ -7,7 +7,7 @@ import { useContext } from "react";
 import { Context } from "../../context/Context";
 
 export default function Friends() {
-  const folder = "http://localhost:5000/images/";
+  const folder = "http://localhost:5000/image/";
 
   const { user, authToken } = useContext(Context);
 
