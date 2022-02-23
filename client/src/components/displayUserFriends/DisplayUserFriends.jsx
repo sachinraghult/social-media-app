@@ -45,7 +45,7 @@ export default function DisplayFriends({ type, userProfile }) {
   };
 
   return (
-    <div className="sidebar1">
+    <div className="sidebar">
       <div className="sidebarWrapper">
         <div className="headingContainer">
           <span className="heading">{type}</span>

@@ -103,7 +103,7 @@ export default function UserProfile() {
                 </div>
               </div>
 
-              {user.following.includes(profile._id) ? (
+              {user.following.some((f) => f._id === profile._id) ? (
                 <button
                   className="shareButton"
                   style={{ float: "right", backgroundColor: "red" }}
