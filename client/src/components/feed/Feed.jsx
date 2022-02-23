@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { Context } from "../../context/Context";
 import { useState } from "react";
 
-export default function Feed() {
+export default function Feed({ bookmark }) {
   const { user, authToken } = useContext(Context);
 
   const [posts, setPosts] = useState([]);
@@ -15,6 +15,7 @@ export default function Feed() {
   const sendPostState = (res) => {
     setPosts([res.data, ...posts]);
   };
+
 
   const sendPostsState = (id, action) => {
     if (action.type === "edit") {
@@ -34,13 +35,21 @@ export default function Feed() {
 
   useEffect(() => {
     const getFeed = async () => {
-      try {
-        const res = await axios.get("/post?feed=true", {
+      if (bookmark) {
+        const res = await axios.get("/user/bookmarks", {
           headers: { authorization: authToken },
         });
 
-        setPosts(res.data);
-      } catch (err) {}
+        setPosts(res.data.bookmark);
+      } else {
+        try {
+          const res = await axios.get("/post?feed=true", {
+            headers: { authorization: authToken },
+          });
+
+          setPosts(res.data);
+        } catch (err) {}
+      }
     };
 
     getFeed();

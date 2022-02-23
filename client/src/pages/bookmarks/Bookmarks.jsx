@@ -2,7 +2,7 @@ import Topbar from "../../components/topbar/Topbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Feed from "../../components/feed/Feed";
 import Rightbar from "../../components/rightbar/Rightbar";
-import "./home.css"
+import "./Bookmarks.css"
 
 export default function Home() {
   return (
@@ -10,7 +10,7 @@ export default function Home() {
       <Topbar />
       <div className="homeContainer">
         <Sidebar />
-        <Feed bookmark={false} />
+        <Feed bookmark={true} />
         <Rightbar/>
       </div>
     </>

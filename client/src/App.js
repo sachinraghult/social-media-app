@@ -14,6 +14,7 @@ import UserProfile from "./pages/userProfile/UserProfile";
 import UserFriends from "./pages/userFriends/UserFriends";
 import Reels from "./pages/reels/Reels";
 import Grid from "./pages/grid/Grid";
+import Bookmark from "./pages/bookmarks/Bookmarks";
 
 function App() {
   const { user, authToken } = useContext(Context);
@@ -56,6 +57,7 @@ function App() {
 
         <Route path="/reels" element={user ? <Reels /> : <Login />} />
         <Route path="/grid" element={user ? <Grid /> : <Login />} />
+        <Route path="/bookmarks" element={user ? <Bookmark /> : <Login />} />
       </Routes>
     </BrowserRouter>
   );

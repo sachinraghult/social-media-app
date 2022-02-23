@@ -68,7 +68,7 @@ export default function Sidebar() {
             </li>
           </Link>
 
-          <Link to="#" className="link">
+          <Link to="/bookmarks" className="link">
             <li className="sidebarListItem">
               <Bookmark className="sidebarIcon" />
               <span className="sidebarListItemText">Bookmarks</span>

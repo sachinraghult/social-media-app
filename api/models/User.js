@@ -45,6 +45,10 @@ const UserSchema = new mongoose.Schema(
       type: [mongoose.Schema.Types.ObjectId],
       ref: "User",
     },
+    bookmark: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "Post",
+    },
     status: {
       type: String,
       default: "Hi! I am using Lamasocial",

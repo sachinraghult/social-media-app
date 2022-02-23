@@ -8,6 +8,7 @@ import axios from "../../axios";
 import { Link } from "react-router-dom";
 import { useContext, useState } from "react";
 import { Context } from "../../context/Context";
+import { UpdateSuccess } from "../../context/Actions";
 import { useEffect } from "react";
 import styled from "styled-components";
 import moment from "moment";
@@ -18,7 +19,7 @@ export default function Post({ post, recievedPostsState, recievedLikeState }) {
   const folder = "http://localhost:5000/image/";
   const folder1 = "http://localhost:5000/video/";
 
-  const { user, authToken } = useContext(Context);
+  const { user, authToken, dispatch } = useContext(Context);
 
   const [like, setLike] = useState([]);
   const [edit, setEdit] = useState(false);
@@ -29,6 +30,18 @@ export default function Post({ post, recievedPostsState, recievedLikeState }) {
   useEffect(() => {
     setLike(post?.likes);
   }, [post]);
+
+  const handleBookmark = async () => {
+    try {
+      const res = await axios.put("/user/bookmark/" + post._id, post, {
+        headers: { authorization: authToken },
+      });
+
+      dispatch(UpdateSuccess(res.data));
+    } catch (err) {
+      
+    }
+  }
 
   const handleLike = async (e) => {
     try {
@@ -149,45 +162,57 @@ export default function Post({ post, recievedPostsState, recievedLikeState }) {
                   )}
                 </span>
               </div>
-              {!(post?.desc === "Updated his profile picture" ||
-                post?.desc === "Updated her profile picture") && (
-                <div className="postTopRight">
-                  {true ? <Bookmark /> : <BookmarkBorder />}
-                  {user._id === post.userId._id && (
-                    <>
-                      <IconStyled>
-                        <IconButton
-                          aria-label="more"
-                          onClick={handleClick}
-                          aria-haspopup="true"
-                          aria-controls="long-menu"
-                        >
-                          <MoreVert />
-                        </IconButton>
-                      </IconStyled>
-                      <Menu
-                        anchorEl={anchorEl}
-                        keepMounted
-                        onClose={handleClose}
-                        open={open}
-                      >
-                        {MyOptions.map((option) => (
-                          <MenuItem
-                            key={option}
-                            onClick={
-                              option === "Edit Post"
-                                ? () => setEdit(true)
-                                : handleDelete
-                            }
+              {!(
+                post?.desc === "Updated his profile picture" ||
+                post?.desc === "Updated her profile picture"
+              ) && (
+                  <div className="postTopRight" style={{cursor: "pointer"}}>
+                    {user.bookmark.includes(post._id) ? (
+                      (post.userId._id !== user._id) &&
+                      <span onClick={handleBookmark}>
+                        <Bookmark />
+                      </span>
+                    ) : (
+                      (post.userId._id !== user._id) &&
+                      <span onClick={handleBookmark}>
+                        <BookmarkBorder />
+                      </span>
+                    )}
+                    {user._id === post.userId._id && (
+                      <>
+                        <IconStyled>
+                          <IconButton
+                            aria-label="more"
+                            onClick={handleClick}
+                            aria-haspopup="true"
+                            aria-controls="long-menu"
                           >
-                            {option}
-                          </MenuItem>
-                        ))}
-                      </Menu>
-                    </>
-                  )}
-                </div>
-              )}
+                            <MoreVert />
+                          </IconButton>
+                        </IconStyled>
+                        <Menu
+                          anchorEl={anchorEl}
+                          keepMounted
+                          onClose={handleClose}
+                          open={open}
+                        >
+                          {MyOptions.map((option) => (
+                            <MenuItem
+                              key={option}
+                              onClick={
+                                option === "Edit Post"
+                                  ? () => setEdit(true)
+                                  : handleDelete
+                              }
+                            >
+                              {option}
+                            </MenuItem>
+                          ))}
+                        </Menu>
+                      </>
+                    )}
+                  </div>
+                )}
             </div>
             <div className="postCenter">
               {post?.desc === "Updated his profile picture" ||

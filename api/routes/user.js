@@ -25,6 +25,10 @@ router.put("/update", verify, async (req, res) => {
       },
       { new: true }
     );
+
+    await updatedUser.populate("followers", "name username _id profilePic");
+    await updatedUser.populate("following", "name username _id profilePic");
+
     const { password, ...others } = updatedUser._doc;
     res.status(200).json(others);
   } catch (err) {
@@ -50,7 +54,7 @@ router.put("/follow", verify, async (req, res) => {
         $push: { following: to._id },
       },
       { new: true }
-    )
+    );
 
     await updatedFrom.populate("followers", "name username _id profilePic");
     await updatedFrom.populate("following", "name username _id profilePic");
@@ -61,7 +65,7 @@ router.put("/follow", verify, async (req, res) => {
         $push: { followers: from._id },
       },
       { new: true }
-    )
+    );
 
     const { password, ...others } = updatedFrom._doc;
 
@@ -165,6 +169,43 @@ router.put("/remove", verify, async (req, res) => {
   }
 });
 
+//HANDLE BOOKMARK
+router.put("/bookmark/:id", verify, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json("Access Denied!");
+
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json("Post not found!");
+
+    var updatedUser;
+    if (user.bookmark.includes(post._id)) {
+      updatedUser = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+          $pull: { bookmark: post._id },
+        },
+        { new: true }
+      );
+    } else {
+      updatedUser = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+          $push: { bookmark: post._id },
+        },
+        { new: true }
+      );
+    }
+
+    await updatedUser.populate("followers", "name username _id profilePic");
+    await updatedUser.populate("following", "name username _id profilePic");
+
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    res.status(500).json("Cannot add Bookmark");
+  }
+});
+
 // DELETE
 router.delete("/", verify, async (req, res) => {
   try {
@@ -217,6 +258,31 @@ router.delete("/", verify, async (req, res) => {
     res.status(200).json("User has been deleted...");
   } catch (err) {
     res.status(500).json("Cannot delete user");
+  }
+});
+
+//GET BOOKMARK
+router.get("/bookmarks", verify, async (req, res) => {
+  try {
+    const profile = req.query.profile;
+
+    var user;
+    if (profile) user = await User.findById(profile);
+    else user = await User.findById(req.user._id);
+
+    if (!user) return res.status(404).json("User not found!");
+
+    await user.populate("bookmark", "desc photo userId likes edited _id");
+    await Promise.all(
+      user.bookmark.map(async (b) => {
+        b = await b.populate("userId", "name username _id profilePic");
+      })
+    );
+
+    const { password, ...others } = user._doc;
+    res.status(200).json(others);
+  } catch (err) {
+    res.status(500).json("Cannot get user");
   }
 });
 
