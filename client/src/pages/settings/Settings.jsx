@@ -87,11 +87,26 @@ export default function Settings() {
         data.append("file", profilePic);
         newPhoto.profilePic = filename;
         const type = profilePic.type.split("/")[0];
+
+        const newPost = {
+          desc: "Updated " + ((user.gender == "male") ? "his " : "her ") + "profile picture",
+          userId: user._id,
+          photo : filename,
+        };
+        console.log("new Post", newPost)
         setProfilePic(null);
 
         try {
           await axios.post("/upload/" + type, data);
         } catch (err) {}
+        console.log("upload", newPost)
+        try {
+          await axios.post("/post", newPost, {
+            headers: { authorization: authToken },
+          });
+        } catch (err) {
+          
+        }
       }
     }
 
