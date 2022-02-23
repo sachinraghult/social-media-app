@@ -72,10 +72,11 @@ export default function Settings() {
         data.append("name", filename);
         data.append("file", coverPic);
         newPhoto.coverPic = filename;
+        const type = coverPic.type.split("/")[0];
         setCoverPic(null);
 
         try {
-          await axios.post("/upload", data);
+          await axios.post("/upload/" + type, data);
         } catch (err) {}
       }
     } else if (type === "profile") {
@@ -85,10 +86,11 @@ export default function Settings() {
         data.append("name", filename);
         data.append("file", profilePic);
         newPhoto.profilePic = filename;
+        const type = profilePic.type.split("/")[0];
         setProfilePic(null);
 
         try {
-          await axios.post("/upload", data);
+          await axios.post("/upload/" + type, data);
         } catch (err) {}
       }
     }
