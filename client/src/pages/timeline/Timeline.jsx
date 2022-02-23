@@ -37,9 +37,16 @@ function Timeline() {
       if (tl?.post) {
         return (
           <Link className="link" to={`/post/${tl.comment.post._id}/comments`}>
-            <p>
-              commented on your post : <i>{tl?.comment.comment}</i>
-            </p>
+            {tl?.post.desc === "Updated his profile picture" ||
+            tl?.post?.desc === "Updated her profile picture" ? (
+              <p>
+                commented on your profile picture : <i>{tl?.comment.comment}</i>
+              </p>
+            ) : (
+              <p>
+                commented on your post : <i>{tl?.comment.comment}</i>
+              </p>
+            )}
           </Link>
         );
       } else {
@@ -56,7 +63,12 @@ function Timeline() {
     } else if (tl?.post) {
       return (
         <Link className="link" to={`/post/${tl.post._id}/likes`}>
-          <p>liked your post</p>
+          {tl?.post.desc === "Updated his profile picture" ||
+          tl?.post?.desc === "Updated her profile picture" ? (
+            <p>liked your profile picture</p>
+          ) : (
+            <p>liked your post</p>
+          )}
         </Link>
       );
     } else {
@@ -74,6 +86,14 @@ function Timeline() {
         <Link className="link" to={`/post/${tl.comment.post._id}/comments`}>
           {/\.(mp4|ogg|webm)$/i.test(tl?.post.photo) ? (
             <PostImage src="https://www.pinpng.com/pngs/m/120-1204737_play-start-video-film-arrow-media-multimedia-blue.png" />
+          ) : tl?.post.desc === "Updated his profile picture" ||
+            tl?.post?.desc === "Updated her profile picture" ? (
+            <PostImage
+              className="postImg"
+              style={{ borderRadius: "50%", objectFit: "cover" }}
+              src={folder + tl?.comment.post.photo}
+              alt=""
+            />
           ) : (
             <PostImage
               className="postImg"
@@ -88,6 +108,14 @@ function Timeline() {
         <Link className="link" to={`/post/${tl.post._id}/likes`}>
           {/\.(mp4|ogg|webm)$/i.test(tl?.post.photo) ? (
             <PostImage src="https://www.pinpng.com/pngs/m/120-1204737_play-start-video-film-arrow-media-multimedia-blue.png" />
+          ) : tl?.post.desc === "Updated his profile picture" ||
+            tl?.post?.desc === "Updated her profile picture" ? (
+            <PostImage
+              className="postImg"
+              src={folder + tl?.post.photo}
+              style={{ borderRadius: "50%", objectFit: "cover" }}
+              alt=""
+            />
           ) : (
             <PostImage
               className="postImg"
