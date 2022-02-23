@@ -149,47 +149,76 @@ export default function Post({ post, recievedPostsState, recievedLikeState }) {
                   )}
                 </span>
               </div>
-              <div className="postTopRight">
-                {true ? <Bookmark /> : <BookmarkBorder />}
-                {user._id === post.userId._id && (
-                  <>
-                    <IconStyled>
-                      <IconButton
-                        aria-label="more"
-                        onClick={handleClick}
-                        aria-haspopup="true"
-                        aria-controls="long-menu"
-                      >
-                        <MoreVert />
-                      </IconButton>
-                    </IconStyled>
-                    <Menu
-                      anchorEl={anchorEl}
-                      keepMounted
-                      onClose={handleClose}
-                      open={open}
-                    >
-                      {MyOptions.map((option) => (
-                        <MenuItem
-                          key={option}
-                          onClick={
-                            option === "Edit Post"
-                              ? () => setEdit(true)
-                              : handleDelete
-                          }
+              {!(post?.desc === "Updated his profile picture" ||
+                post?.desc === "Updated her profile picture") && (
+                <div className="postTopRight">
+                  {true ? <Bookmark /> : <BookmarkBorder />}
+                  {user._id === post.userId._id && (
+                    <>
+                      <IconStyled>
+                        <IconButton
+                          aria-label="more"
+                          onClick={handleClick}
+                          aria-haspopup="true"
+                          aria-controls="long-menu"
                         >
-                          {option}
-                        </MenuItem>
-                      ))}
-                    </Menu>
-                  </>
-                )}
-              </div>
+                          <MoreVert />
+                        </IconButton>
+                      </IconStyled>
+                      <Menu
+                        anchorEl={anchorEl}
+                        keepMounted
+                        onClose={handleClose}
+                        open={open}
+                      >
+                        {MyOptions.map((option) => (
+                          <MenuItem
+                            key={option}
+                            onClick={
+                              option === "Edit Post"
+                                ? () => setEdit(true)
+                                : handleDelete
+                            }
+                          >
+                            {option}
+                          </MenuItem>
+                        ))}
+                      </Menu>
+                    </>
+                  )}
+                </div>
+              )}
             </div>
             <div className="postCenter">
-              <span className="postText">{post?.desc}</span>
+              {post?.desc === "Updated his profile picture" ||
+              post?.desc === "Updated her profile picture" ? (
+                <span
+                  className="postText"
+                  style={{ display: "flex", flexDirection: "column" }}
+                >
+                  <i>{post?.desc}</i>
+                </span>
+              ) : (
+                <span className="postText">{post?.desc}</span>
+              )}
+
               {/\.(mp4|ogg|webm)$/i.test(post?.photo) ? (
                 <Video src={folder1 + post?.photo} />
+              ) : post?.desc === "Updated his profile picture" ||
+                post?.desc === "Updated her profile picture" ? (
+                <div style={{ marginLeft: "30%" }}>
+                  <img
+                    className="postImg"
+                    style={{
+                      width: "300px",
+                      height: "300px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                    }}
+                    src={folder + post?.photo}
+                    alt=""
+                  />
+                </div>
               ) : (
                 <img className="postImg" src={folder + post?.photo} alt="" />
               )}
