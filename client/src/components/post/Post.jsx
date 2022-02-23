@@ -347,7 +347,6 @@ export default function Post({ post, recievedPostsState, recievedLikeState }) {
                   accept="image/*, video/*"
                   style={{ display: "none" }}
                   onChange={(e) => setEditedFile(e.target.files[0])}
-                  required
                 />
               </div>
               <button

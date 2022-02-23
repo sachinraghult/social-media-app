@@ -300,6 +300,8 @@ router.get("/", verify, async (req, res) => {
     await user.populate("followers", "name username _id profilePic");
     await user.populate("following", "name username _id profilePic");
 
+    console.log("user ", user);
+
     const { password, ...others } = user._doc;
     res.status(200).json(others);
   } catch (err) {

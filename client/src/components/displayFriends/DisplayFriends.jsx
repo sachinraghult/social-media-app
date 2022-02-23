@@ -17,8 +17,18 @@ export default function DisplayFriends({ type }) {
   const [friends, setFriends] = useState([]);
 
   useEffect(() => {
-    if (type == "Followers") setFriends(user.followers);
-    else if (type == "Following") setFriends(user.following);
+    const getFriends = async () => {
+      try {
+        const res = await axios.get("/user", {
+          headers: { authorization: authToken },
+        });
+
+        if (type == "Followers") setFriends(res.data.followers);
+        else if (type == "Following") setFriends(res.data.following);
+      } catch (err) {}
+    };
+
+    getFriends();
   }, []);
 
   const handleUnfollow = async (id) => {
@@ -55,7 +65,7 @@ export default function DisplayFriends({ type }) {
           <hr className="sidebarHr" />
         </div>
         <ul className="sidebarFriendList">
-          {friends &&
+          {friends.length !== 0 &&
             friends.map((user) => (
               <li className="sidebarCloseFriend">
                 <div>

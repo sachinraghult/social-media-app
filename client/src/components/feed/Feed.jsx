@@ -16,7 +16,6 @@ export default function Feed({ bookmark }) {
     setPosts([res.data, ...posts]);
   };
 
-
   const sendPostsState = (id, action) => {
     if (action.type === "edit") {
       var index = posts.findIndex((m) => m._id.toString() === id.toString());
@@ -58,7 +57,8 @@ export default function Feed({ bookmark }) {
   return (
     <div className="feed">
       <div className="feedWrapper">
-        <Share recievedPostState={sendPostState} />
+        {posts.length === 0 && <h3>You haven't bookmarked yet!</h3>}
+        {!bookmark && <Share recievedPostState={sendPostState} />}
         {posts.map((post) => (
           <Post
             key={post._id}
