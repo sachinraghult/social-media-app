@@ -57,7 +57,7 @@ export default function Feed({ bookmark }) {
   return (
     <div className="feed">
       <div className="feedWrapper">
-        {posts.length === 0 && <h3>You haven't bookmarked yet!</h3>}
+        {bookmark && posts.length === 0 && <h3>You haven't bookmarked yet!</h3>}
         {!bookmark && <Share recievedPostState={sendPostState} />}
         {posts.map((post) => (
           <Post

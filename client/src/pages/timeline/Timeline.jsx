@@ -84,10 +84,10 @@ function Timeline() {
     if (tl?.comment) {
       return (
         <Link className="link" to={`/post/${tl.comment.post._id}/comments`}>
-          {/\.(mp4|ogg|webm)$/i.test(tl?.post.photo) ? (
+          {/\.(mp4|ogg|webm)$/i.test(tl?.comment.post.photo) ? (
             <PostImage src="https://www.pinpng.com/pngs/m/120-1204737_play-start-video-film-arrow-media-multimedia-blue.png" />
-          ) : tl?.post.desc === "Updated his profile picture" ||
-            tl?.post?.desc === "Updated her profile picture" ? (
+          ) : tl?.comment.post.desc === "Updated his profile picture" ||
+            tl?.comment.post?.desc === "Updated her profile picture" ? (
             <PostImage
               className="postImg"
               style={{ borderRadius: "50%", objectFit: "cover" }}

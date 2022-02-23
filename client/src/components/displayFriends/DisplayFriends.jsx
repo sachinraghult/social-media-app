@@ -65,7 +65,7 @@ export default function DisplayFriends({ type }) {
           <hr className="sidebarHr" />
         </div>
         <ul className="sidebarFriendList">
-          {friends.length !== 0 &&
+          {friends &&
             friends.map((user) => (
               <li className="sidebarCloseFriend">
                 <div>

@@ -19,7 +19,7 @@ export default function DisplayFriends({ type, userProfile }) {
   useEffect(() => {
     if (type === "Followers") setFriends([...userProfile.followers]);
     else if (type === "Following") setFriends([...userProfile.following]);
-    
+    console.log(user);
   }, []);
 
   const handleFollow = async (e, id) => {
@@ -55,52 +55,56 @@ export default function DisplayFriends({ type, userProfile }) {
           {friends.length !== 0 &&
             friends.map((u) => (
               <>
-              {console.log("heyy ", friends)}
-              <li className="sidebarCloseFriend">
-                <div>
-                  <Link className="link" to={`/user/${u._id}`}>
-                    <div style={{ display: "flex", flexDirection: "row" }}>
-                      <img
-                        className="sidebarCloseFriendImg"
-                        src={folder + u.profilePic}
-                        alt=""
-                      />
-                      <div style={{ display: "flex", flexDirection: "column" }}>
-                        <span className="sidebarFriendName">{u.username}</span>
-                        <small
-                          className="sidebarFriendName"
-                          style={{ color: "grey" }}
+                {console.log("heyy ", friends)}
+                <li className="sidebarCloseFriend">
+                  <div>
+                    <Link className="link" to={`/user/${u._id}`}>
+                      <div style={{ display: "flex", flexDirection: "row" }}>
+                        <img
+                          className="sidebarCloseFriendImg"
+                          src={folder + u.profilePic}
+                          alt=""
+                        />
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
                         >
-                          {u.name}
-                        </small>
+                          <span className="sidebarFriendName">
+                            {u.username}
+                          </span>
+                          <small
+                            className="sidebarFriendName"
+                            style={{ color: "grey" }}
+                          >
+                            {u.name}
+                          </small>
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                </div>
-                <div>
-                  {user._id !== u._id && (
-                    <>
-                      {user.following.some((f) => f._id === u._id) ? (
-                        <button
-                          type="submit"
-                          className="followButton"
-                          onClick={(e) => handleUnfollow(e, u._id)}
-                        >
-                          Unfollow
-                        </button>
-                      ) : (
-                        <button
-                          type="submit"
-                          className="followButton"
-                          onClick={(e) => handleFollow(e, u._id)}
-                        >
-                          Follow
-                        </button>
-                      )}
-                    </>
-                  )}
-                </div>
-              </li>
+                    </Link>
+                  </div>
+                  <div>
+                    {user._id !== u._id && (
+                      <>
+                        {user.following.some((f) => f._id === u._id) ? (
+                          <button
+                            type="submit"
+                            className="followButton"
+                            onClick={(e) => handleUnfollow(e, u._id)}
+                          >
+                            Unfollow
+                          </button>
+                        ) : (
+                          <button
+                            type="submit"
+                            className="followButton"
+                            onClick={(e) => handleFollow(e, u._id)}
+                          >
+                            Follow
+                          </button>
+                        )}
+                      </>
+                    )}
+                  </div>
+                </li>
               </>
             ))}
         </ul>

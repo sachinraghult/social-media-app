@@ -154,6 +154,16 @@ router.delete("/:id", verify, async (req, res) => {
     if (comment.user.toString() !== req.user._id)
       return res.status(401).json("Access Denied!");
 
+    var replies = await Comment.find({ parent: comment._id }).catch((err) =>
+      res.status(404).json("Cannot find any reply")
+    );
+
+    await Promise.all(
+      replies.map(async (reply) => {
+        await Timeline.deleteMany({ comment: reply._id });
+      })
+    );
+
     await Comment.deleteMany({ parent: comment._id }).catch((err) =>
       res.status(404).json("Cannot find any reply")
     );
