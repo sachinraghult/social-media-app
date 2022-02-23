@@ -17,41 +17,29 @@ export default function DisplayFriends({ type, userProfile }) {
   const [friends, setFriends] = useState([]);
 
   useEffect(() => {
-    if (type === "Followers") setFriends(userProfile.followers);
-    else if (type === "Following") setFriends(userProfile.following);
+    if (type === "Followers") setFriends([...userProfile.followers]);
+    else if (type === "Following") setFriends([...userProfile.following]);
+    
   }, []);
 
-  const handleFollow = async (id) => {
+  const handleFollow = async (e, id) => {
+    e.preventDefault();
     try {
       const res = await axios.put("/user/follow?followers=" + id, user, {
         headers: { authorization: authToken },
       });
+
       dispatch(UpdateSuccess(res.data));
     } catch (err) {}
   };
 
-  const handleUnfollow = async (id) => {
+  const handleUnfollow = async (e, id) => {
+    e.preventDefault();
     try {
       const res = await axios.put("/user/unfollow?followers=" + id, user, {
         headers: { authorization: authToken },
       });
-      var filteredFollowing = friends.filter(
-        (friend) => friend._id.toString() !== id.toString()
-      );
-      setFriends(filteredFollowing);
-      dispatch(UpdateSuccess(res.data));
-    } catch (err) {}
-  };
 
-  const handleRemove = async (id) => {
-    try {
-      const res = await axios.put("/user/remove?followers=" + id, user, {
-        headers: { authorization: authToken },
-      });
-      var filteredFollowers = friends.filter(
-        (friend) => friend._id.toString() !== id.toString()
-      );
-      setFriends(filteredFollowers);
       dispatch(UpdateSuccess(res.data));
     } catch (err) {}
   };
@@ -64,8 +52,10 @@ export default function DisplayFriends({ type, userProfile }) {
           <hr className="sidebarHr" />
         </div>
         <ul className="sidebarFriendList">
-          {friends &&
+          {friends.length !== 0 &&
             friends.map((u) => (
+              <>
+              {console.log("heyy ", friends)}
               <li className="sidebarCloseFriend">
                 <div>
                   <Link className="link" to={`/user/${u._id}`}>
@@ -90,11 +80,11 @@ export default function DisplayFriends({ type, userProfile }) {
                 <div>
                   {user._id !== u._id && (
                     <>
-                      {user.following.includes(u._id) ? (
+                      {user.following.some((f) => f._id === u._id) ? (
                         <button
                           type="submit"
                           className="followButton"
-                          onClick={() => handleUnfollow(u._id)}
+                          onClick={(e) => handleUnfollow(e, u._id)}
                         >
                           Unfollow
                         </button>
@@ -102,7 +92,7 @@ export default function DisplayFriends({ type, userProfile }) {
                         <button
                           type="submit"
                           className="followButton"
-                          onClick={() => handleFollow(u._id)}
+                          onClick={(e) => handleFollow(e, u._id)}
                         >
                           Follow
                         </button>
@@ -111,6 +101,7 @@ export default function DisplayFriends({ type, userProfile }) {
                   )}
                 </div>
               </li>
+              </>
             ))}
         </ul>
       </div>

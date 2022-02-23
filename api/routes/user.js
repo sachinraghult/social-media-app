@@ -44,20 +44,24 @@ router.put("/follow", verify, async (req, res) => {
     if (to.followers.includes(from._id))
       return res.status(404).json("Follower already exist!");
 
-    const updatedFrom = await User.findByIdAndUpdate(
+    var updatedFrom = await User.findByIdAndUpdate(
       from._id,
       {
         $push: { following: to._id },
       },
       { new: true }
-    );
-    const updatedTo = await User.findByIdAndUpdate(
+    )
+
+    await updatedFrom.populate("followers", "name username _id profilePic");
+    await updatedFrom.populate("following", "name username _id profilePic");
+
+    var updatedTo = await User.findByIdAndUpdate(
       to._id,
       {
         $push: { followers: from._id },
       },
       { new: true }
-    );
+    )
 
     const { password, ...others } = updatedFrom._doc;
 
@@ -103,6 +107,10 @@ router.put("/unfollow", verify, async (req, res) => {
       },
       { new: true }
     );
+
+    await updatedFrom.populate("followers", "name username _id profilePic");
+    await updatedFrom.populate("following", "name username _id profilePic");
+
     const updatedTo = await User.findByIdAndUpdate(
       to._id,
       {
@@ -138,6 +146,10 @@ router.put("/remove", verify, async (req, res) => {
       },
       { new: true }
     );
+
+    await updatedFrom.populate("followers", "name username _id profilePic");
+    await updatedFrom.populate("following", "name username _id profilePic");
+
     const updatedTo = await User.findByIdAndUpdate(
       to._id,
       {

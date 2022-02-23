@@ -17,18 +17,8 @@ export default function DisplayFriends({ type }) {
   const [friends, setFriends] = useState([]);
 
   useEffect(() => {
-    const getFriends = async () => {
-      try {
-        const res = await axios.get("/user", {
-          headers: { authorization: authToken },
-        });
-
-        if (type == "Followers") setFriends(res.data.followers);
-        else if (type == "Following") setFriends(res.data.following);
-      } catch (err) {}
-    };
-
-    getFriends();
+    if (type == "Followers") setFriends(user.followers);
+    else if (type == "Following") setFriends(user.following);
   }, []);
 
   const handleUnfollow = async (id) => {
