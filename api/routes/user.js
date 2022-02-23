@@ -300,12 +300,65 @@ router.get("/", verify, async (req, res) => {
     await user.populate("followers", "name username _id profilePic");
     await user.populate("following", "name username _id profilePic");
 
-    console.log("user ", user);
-
     const { password, ...others } = user._doc;
     res.status(200).json(others);
   } catch (err) {
     res.status(500).json("Cannot get user");
+  }
+});
+
+//GET SUGGESTIONS
+
+router.get("/suggestions", verify, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json("User not found!");
+
+    var people = [];
+
+    await Promise.all(
+      user.following.map(async (b) => {
+        var userFollowers = await User.findById(b).populate(
+          "following",
+          "name username _id profilePic"
+        );
+
+        var addParent = userFollowers.following;
+        addParent = addParent.map((u) => ({
+          ...u._doc,
+          parent: {
+            name: userFollowers.name,
+            username: userFollowers.username,
+            _id: userFollowers._id,
+            profilePic: userFollowers.profilePic,
+          },
+        }));
+        people.push(...addParent);
+      })
+    );
+
+    people = people.filter((item) => !user.following.includes(item._id));
+    people = people.filter(
+      (item) => user._id.toString() !== item._id.toString()
+    );
+
+    const response = Array.from(new Set(people.map((s) => s.username))).map(
+      (lab, index) => {
+        return {
+          _id: people[index]._id,
+          username: lab,
+          name: people[index].name,
+          profilePic: people[index].profilePic,
+          parent: people
+            .filter((s) => s.username === lab)
+            .map((op) => op.parent),
+        };
+      }
+    );
+
+    res.status(200).json(response);
+  } catch (err) {
+    res.status(500).json("Cannot get Suggestions");
   }
 });
 

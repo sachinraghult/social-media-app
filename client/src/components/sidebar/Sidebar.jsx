@@ -61,10 +61,11 @@ export default function Sidebar() {
             </li>
           </Link>
 
-          <Link to="/grid" className="link">
+          <Link to="/suggestions" className="link">
             <li className="sidebarListItem">
-              <PlayCircleFilledOutlined className="sidebarIcon" />
-              <span className="sidebarListItemText">Grid</span>
+              <Group className="sidebarIcon" />
+
+              <span className="sidebarListItemText">Suggestions</span>
             </li>
           </Link>
 
@@ -72,6 +73,13 @@ export default function Sidebar() {
             <li className="sidebarListItem">
               <Bookmark className="sidebarIcon" />
               <span className="sidebarListItemText">Bookmarks</span>
+            </li>
+          </Link>
+
+          <Link to="/grid" className="link">
+            <li className="sidebarListItem">
+              <PlayCircleFilledOutlined className="sidebarIcon" />
+              <span className="sidebarListItemText">Grid</span>
             </li>
           </Link>
 

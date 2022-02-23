@@ -1,4 +1,4 @@
-.sidebar {
+.sidebar10 {
   flex: 3;
   height: calc(100vh - 50px);
   overflow-y: scroll;
@@ -16,27 +16,27 @@
   background-color: rgb(179, 179, 179);
 }
 
-.sidebarWrapper {
+.sidebarWrapper10 {
   padding: 20px;
 }
 
-.sidebarList {
+.sidebarList10 {
   padding: 0;
   margin: 0;
   list-style: none;
 }
 
-.sidebarListItem {
+.sidebarListItem10 {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
 }
 
-.sidebarIcon {
+.sidebarIcon10 {
   margin-right: 15px;
 }
 
-.sidebarButton {
+.sidebarButton10 {
   width: 150px;
   border: none;
   padding: 10px;
@@ -44,17 +44,17 @@
   font-weight: 500;
 }
 
-.sidebarHr {
+.sidebarHr10 {
   margin: 20px 0;
 }
 
-.sidebarFriendList {
+.sidebarFriendList10 {
   padding: 0;
   margin: 0;
   list-style: none;
 }
 
-.sidebarCloseFriend {
+.sidebarCloseFriend10 {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -63,9 +63,9 @@
   z-index: -1;
 }
 
-.sidebarCloseFriendImg {
-  width: 50px;
-  height: 50px;
+.sidebarCloseFriendImg10 {
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
   object-fit: cover;
   margin-right: 10px;
