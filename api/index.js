@@ -9,7 +9,7 @@ const comment = require("./routes/comment");
 const timeline = require("./routes/timeline");
 const multer = require("multer");
 const path = require("path");
-const { nextTick } = require("process");
+const interaction = require("./routes/interaction");
 
 const app = express();
 
@@ -27,8 +27,8 @@ mongoose
   .then(console.log("Connected to DB"))
   .catch((err) => console.log(err));
 
-  app.use("/video", express.static(path.join(__dirname, "/video")));
-  app.use("/image", express.static(path.join(__dirname, "/image")));
+app.use("/video", express.static(path.join(__dirname, "/video")));
+app.use("/image", express.static(path.join(__dirname, "/image")));
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -40,19 +40,16 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-app.post(
-  "/api/upload/:type",
-  upload.single("file"),
-  (req, res) => {
-    res.status(200).json("File has been uploaded");
-  }
-);
+app.post("/api/upload/:type", upload.single("file"), (req, res) => {
+  res.status(200).json("File has been uploaded");
+});
 
 app.use("/api/auth", auth);
 app.use("/api/post", post);
 app.use("/api/user", user);
 app.use("/api/comment", comment);
 app.use("/api/timeline", timeline);
+app.use("/api/interaction", interaction);
 
 app.get("/", (req, res) => res.send("hello world"));
 

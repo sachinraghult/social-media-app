@@ -1,9 +1,32 @@
 import "./rightbar.css";
-import { Users } from "../../dummyData";
 import Online from "../online/Online";
 import moment from "moment";
+import { Context } from "../../context/Context";
+import { useState, useEffect, useContext } from "react";
+import axios from "../../axios";
+import { Users } from "../../dummyData";
+import { Link } from "react-router-dom";
 
-export default function Rightbar({ profile, user }) {
+export default function Rightbar({ profile }) {
+  const { user, authToken } = useContext(Context);
+
+  const [interaction, setInteraction] = useState();
+  const folder = "http://localhost:5000/image/";
+
+  useEffect(() => {
+    const getInteraction = async () => {
+      try {
+        const res = await axios.get("/interaction", {
+          headers: { authorization: authToken },
+        });
+
+        setInteraction(res.data);
+      } catch (err) {}
+    };
+
+    getInteraction();
+  }, [user]);
+
   const HomeRightbar = () => {
     return (
       <>
@@ -30,7 +53,7 @@ export default function Rightbar({ profile, user }) {
         <h4 className="rightbarTitle">User information</h4>
         <div className="rightbarInfo">
           <div className="rightbarInfoItem">
-            <span className="rightbarInfoKey">Username : </span>
+            <span className="rightbarInfoKey">username : </span>
             <span className="rightbarInfoValue">{user?.username}</span>
           </div>
           <div className="rightbarInfoItem">
@@ -51,54 +74,25 @@ export default function Rightbar({ profile, user }) {
         </div>
         <h4 className="rightbarTitle">User friends</h4>
         <div className="rightbarFollowings">
-          <div className="rightbarFollowing">
-            <img
-              src="/assets/person/1.jpeg"
-              alt=""
-              className="rightbarFollowingImg"
-            />
-            <span className="rightbarFollowingName">John Carter</span>
-          </div>
-          <div className="rightbarFollowing">
-            <img
-              src="/assets/person/2.jpeg"
-              alt=""
-              className="rightbarFollowingImg"
-            />
-            <span className="rightbarFollowingName">John Carter</span>
-          </div>
-          <div className="rightbarFollowing">
-            <img
-              src="/assets/person/3.jpeg"
-              alt=""
-              className="rightbarFollowingImg"
-            />
-            <span className="rightbarFollowingName">John Carter</span>
-          </div>
-          <div className="rightbarFollowing">
-            <img
-              src="/assets/person/4.jpeg"
-              alt=""
-              className="rightbarFollowingImg"
-            />
-            <span className="rightbarFollowingName">John Carter</span>
-          </div>
-          <div className="rightbarFollowing">
-            <img
-              src="/assets/person/5.jpeg"
-              alt=""
-              className="rightbarFollowingImg"
-            />
-            <span className="rightbarFollowingName">John Carter</span>
-          </div>
-          <div className="rightbarFollowing">
-            <img
-              src="/assets/person/6.jpeg"
-              alt=""
-              className="rightbarFollowingImg"
-            />
-            <span className="rightbarFollowingName">John Carter</span>
-          </div>
+          {interaction &&
+            interaction.map((i) => (
+              <>
+                <div className="rightbarFollowing">
+                  <Link className="link" to={`/user/${i.to._id}`}>
+                    <img
+                      src={folder + `/${i.to.profilePic}`}
+                      alt=""
+                      className="rightbarFollowingImg"
+                    />
+                    <div>
+                      <span className="rightbarFollowingName">
+                        {i.to.username}
+                      </span>
+                    </div>
+                  </Link>
+                </div>
+              </>
+            ))}
         </div>
       </>
     );

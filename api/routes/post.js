@@ -75,6 +75,12 @@ router.put("/like/:id", verify, async (req, res) => {
         },
         { new: true }
       );
+
+      await axios.put(
+        "http://localhost:5000/api/interaction/" + post.userId + "/dislike",
+        {},
+        { headers: { authorization: req.header("authorization") } }
+      );
     } else {
       updatedPost = await Post.findByIdAndUpdate(
         req.params.id,
@@ -82,6 +88,12 @@ router.put("/like/:id", verify, async (req, res) => {
           $push: { likes: user._id },
         },
         { new: true }
+      );
+
+      await axios.put(
+        "http://localhost:5000/api/interaction/" + post.userId + "/like",
+        {},
+        { headers: { authorization: req.header("authorization") } }
       );
 
       const result = await Timeline.find({

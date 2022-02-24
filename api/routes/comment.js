@@ -72,6 +72,12 @@ router.post("/", verify, async (req, res) => {
       var comment = await newComment.save();
       comment = await comment.populate("user", "name username _id profilePic");
 
+      await axios.put(
+        "http://localhost:5000/api/interaction/" + post.userId._id + "/comment",
+        {},
+        { headers: { authorization: req.header("authorization") } }
+      );
+
       res.status(200).json(comment);
     } catch (err) {
       res.status(404).json("Post not found!");
@@ -126,6 +132,12 @@ router.put("/like/:id", verify, async (req, res) => {
         },
         { new: true }
       );
+
+      await axios.put(
+        "http://localhost:5000/api/interaction/" + comment.user + "/dislike",
+        {},
+        { headers: { authorization: req.header("authorization") } }
+      );
     } else {
       updatedComment = await Comment.findByIdAndUpdate(
         req.params.id,
@@ -133,6 +145,12 @@ router.put("/like/:id", verify, async (req, res) => {
           $push: { likes: user._id },
         },
         { new: true }
+      );
+
+      await axios.put(
+        "http://localhost:5000/api/interaction/" + comment.user + "/like",
+        {},
+        { headers: { authorization: req.header("authorization") } }
       );
     }
 

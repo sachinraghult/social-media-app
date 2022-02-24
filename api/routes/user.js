@@ -86,6 +86,12 @@ router.put("/follow", verify, async (req, res) => {
       res.status(401).json("Cannot insert timeline");
     }
 
+    await axios.put(
+      "http://localhost:5000/api/interaction/" + to._id + "/follow",
+      {},
+      { headers: { authorization: req.header("authorization") } }
+    );
+
     res.status(200).json(others);
   } catch (err) {
     res.status(500).json("Cannot add follower");
@@ -121,6 +127,12 @@ router.put("/unfollow", verify, async (req, res) => {
         $pull: { followers: from._id },
       },
       { new: true }
+    );
+
+    await axios.put(
+      "http://localhost:5000/api/interaction/" + to._id + "/unfollow",
+      {},
+      { headers: { authorization: req.header("authorization") } }
     );
 
     const { password, ...others } = updatedFrom._doc;

@@ -14,13 +14,32 @@ import { Users } from "../../dummyData";
 import { Context } from "../../context/Context";
 import { Logout } from "../../context/Actions";
 import CloseFriend from "../closeFriend/CloseFriend";
+import { useState, useEffect } from "react";
+import axios from "../../axios";
 
 export default function Sidebar() {
   const { user, dispatch } = useContext(Context);
+  const { authToken } = useContext(Context);
+
+  const [interaction, setInteraction] = useState();
 
   const handleSubmit = async (e) => {
     dispatch(Logout());
   };
+
+  useEffect(() => {
+    const getInteraction = async () => {
+      try {
+        const res = await axios.get("/interaction", {
+          headers: { authorization: authToken },
+        });
+
+        setInteraction(res.data);
+      } catch (err) {}
+    };
+
+    getInteraction();
+  }, [user]);
 
   return (
     <div className="sidebar">
@@ -93,9 +112,8 @@ export default function Sidebar() {
         <button className="sidebarButton">Show More</button>
         <hr className="sidebarHr" />
         <ul className="sidebarFriendList">
-          {Users.map((u) => (
-            <CloseFriend key={u.id} user={u} />
-          ))}
+          {interaction &&
+            interaction.map((i) => <CloseFriend key={i.to._id} user={i.to} />)}
         </ul>
       </div>
     </div>
