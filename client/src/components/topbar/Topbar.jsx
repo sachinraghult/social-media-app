@@ -4,6 +4,7 @@ import "./topbar.css";
 import { Context } from "../../context/Context";
 import { Logout } from "../../context/Actions";
 import { Search, Person, Chat, Notifications } from "@material-ui/icons";
+import SearchBox from "../../components/searchBox/SearchBox";
 
 export default function Topbar() {
   const folder = "http://localhost:5000/image/";
@@ -16,7 +17,7 @@ export default function Topbar() {
 
   return (
     <div className="topbarContainer">
-      <div className="topbarLeft">
+      <div className="topbarLeft" style={{marginRight: "40px"}}>
         <span className="logo">
           <Link className="link" to="/">
             Lamasocial
@@ -24,13 +25,7 @@ export default function Topbar() {
         </span>
       </div>
       <div className="topbarCenter">
-        <div className="searchbar">
-          <Search className="searchIcon" />
-          <input
-            placeholder="Search for friend, post or video"
-            className="searchInput"
-          />
-        </div>
+        <SearchBox />
       </div>
       <div className="topbarRight">
         <div className="topbarLinks">

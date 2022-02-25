@@ -39,6 +39,9 @@ router.put("/:id/:type", verify, async (req, res) => {
     const to = await User.findById(req.params.id);
     if (!to) return res.status(404).json("User not found!");
 
+    if(from._id.toString() === to._id.toString())
+      return res.status(200).json();
+
     const interaction = await Interaction.find({ from: from._id, to: to._id });
     if (interaction.length === 0) {
       const response = await axios.post(

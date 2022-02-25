@@ -5,6 +5,7 @@ const verify = require("../middleware/verify");
 const Post = require("../models/Post");
 const Comment = require("../models/Comment");
 const Timeline = require("../models/Timeline");
+const Interaction = require("../models/Interaction");
 const axios = require("axios");
 
 //UPDATE
@@ -371,6 +372,78 @@ router.get("/suggestions", verify, async (req, res) => {
     res.status(200).json(response);
   } catch (err) {
     res.status(500).json("Cannot get Suggestions");
+  }
+});
+
+//GET DEFAULT SEARCHBOX VALUE
+router.get("/defaultValue", verify, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json("User not found!");
+
+    const interaction = await Interaction.find({
+      from: req.user._id,
+    })
+      .sort({ weight: 1 })
+      .limit(8)
+      .sort({ weight: -1 });
+
+    if (!interaction) return res.status(404).json("Interaction not found!");
+
+    let response = [];
+    await Promise.all(
+      interaction.map(async (i) => {
+        const resp = await User.findById(i.to);
+        response.push({...resp._doc, weight: i.weight});
+      })
+    );
+
+    response.sort((a, b) => {
+      return b.weight - a.weight;
+    })
+
+    console.log("resp ", response)
+
+    res.status(200).json(response);
+  } catch (err) {
+    res.status(500).json("Cannot get default value");
+  }
+});
+
+//GET SEARCHBOX
+router.get("/searchbox", verify, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json("User not found!");
+
+    var text = req.query.search;
+
+    const response = await User.find()
+      .or([
+        { username: { $regex: text, $options: "i" } },
+        { name: { $regex: text, $options: "i" } },
+      ])
+      .limit(30);
+
+    let interactors = [];
+    await Promise.all(
+      response.map(async (r) => {
+        const interactor = await Interaction.find({
+          from: req.user._id,
+          to: r._id,
+        });
+        if (interactor.length > 0) interactors.push(r);
+      })
+    );
+
+    let remaining = [];
+    remaining = response.filter(function (item) {
+      return interactors.indexOf(item) < 0;
+    });
+
+    res.status(200).json([interactors, remaining]);
+  } catch (err) {
+    res.status(500).json("Cannot search");
   }
 });
 
