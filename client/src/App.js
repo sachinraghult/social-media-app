@@ -16,6 +16,7 @@ import Reels from "./pages/reels/Reels";
 import Grid from "./pages/grid/Grid";
 import Bookmark from "./pages/bookmarks/Bookmarks";
 import Sugessions from "./pages/suggestions/Suggestions";
+import ViewStatus from "./pages/viewStatus/ViewStatus";
 
 function App() {
   const { user, authToken } = useContext(Context);
@@ -63,6 +64,7 @@ function App() {
           path="/suggestions"
           element={user ? <Sugessions /> : <Login />}
         />
+        <Route path="/viewStatus" element={user ? <ViewStatus /> : <Login />} />
       </Routes>
     </BrowserRouter>
   );
