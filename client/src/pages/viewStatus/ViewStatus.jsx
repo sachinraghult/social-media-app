@@ -36,7 +36,7 @@ export default function ViewStatus() {
         width={"100%"}
         height={"100vh"}
         loop={false}
-        onStoryEnd={handleClose}
+        onAllStoriesEnd={handleClose}
       />
     </div>
   );

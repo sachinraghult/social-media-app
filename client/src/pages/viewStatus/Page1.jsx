@@ -1,9 +1,17 @@
+import { useEffect } from "react";
 import styled from "styled-components";
 import "./ViewStatus.css";
 
 export default function Page1() {
   const folder = "http://localhost:5000/image/";
   const folder1 = "http://localhost:5000/video/";
+
+  useEffect(() => {
+    var myvid = document.getElementById("myvid");
+    myvid.onloadedmetadata = function () {
+      console.log(myvid.duration);
+    };
+  }, []);
 
   return (
     <div>
@@ -38,6 +46,7 @@ export default function Page1() {
       </div>
 
       <video
+        id="myvid"
         className="video"
         preload="auto"
         autoPlay="true"

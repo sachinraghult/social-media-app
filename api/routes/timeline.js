@@ -60,7 +60,6 @@ router.get("/", verify, async (req, res) => {
     );
     res.status(200).json(timeline);
   } catch (err) {
-    console.log(err);
     res.status(500).json("Cannot get timeline");
   }
 });

@@ -402,8 +402,6 @@ router.get("/defaultValue", verify, async (req, res) => {
       return b.weight - a.weight;
     })
 
-    console.log("resp ", response)
-
     res.status(200).json(response);
   } catch (err) {
     res.status(500).json("Cannot get default value");
