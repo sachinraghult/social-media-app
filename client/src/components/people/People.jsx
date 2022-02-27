@@ -22,7 +22,6 @@ export default function People() {
         const res = await axios.get("/user/suggestions", {
           headers: { authorization: authToken },
         });
-        console.log(res.data);
 
         setPeople(res.data);
       } catch (err) {}

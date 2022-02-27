@@ -13,7 +13,6 @@ export default function DisplayLikes({ post }) {
   const folder = "http://localhost:5000/image/";
 
   const { authToken } = useContext(Context);
-  console.log("likes", post);
 
   return (
     <div

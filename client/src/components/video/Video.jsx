@@ -4,7 +4,6 @@ import "video.js/dist/video-js.css";
 import "./Video.css";
 
 export default function Video({ src, reels }) {
-  console.log(src);
   const videoPlayerRef = useRef(null);
 
   const videoJSOptions = {

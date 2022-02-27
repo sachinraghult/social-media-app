@@ -10,6 +10,7 @@ import moment from "moment";
 export default function ViewStatus() {
   const location = useLocation();
   const path = location.pathname.split("/")[2];
+  const startWith = location.pathname?.split("/")[3];
   const navigate = useNavigate();
   const folder = "http://localhost:5000/image/";
   const folder1 = "http://localhost:5000/video/";
@@ -136,11 +137,13 @@ export default function ViewStatus() {
   };
 
   const createTextPage = (story) => {
-    <div className="storyTextContainer">
-      <div className="statusText">
-        <h1 className="contentText">{story.desc}</h1>
+    return (
+      <div className="storyTextContainer">
+        <div className="statusText">
+          <h1 className="contentText">{story.desc}</h1>
+        </div>
       </div>
-    </div>;
+    );
   };
 
   const createContent = () => {
@@ -151,6 +154,7 @@ export default function ViewStatus() {
         /\.(mp4|ogg|webm)$/i.test(s.photo)
           ? tempStories.push({
               content: (props) => <div>{createVideoPage(s)}</div>,
+              duration: (s.duration <= 30) ? s.duration*1000 : 30000,
             })
           : tempStories.push({
               content: (props) => <div>{createImagePage(s)}</div>,
@@ -181,7 +185,7 @@ export default function ViewStatus() {
                 width={"100%"}
                 height={"100vh"}
                 loop={false}
-                currentIndex={status.startAt}
+                currentIndex={(startWith === "status") ? status.startAt : parseInt(startWith)}
                 onAllStoriesEnd={handleClose}
               />
             </>

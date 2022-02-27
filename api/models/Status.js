@@ -8,7 +8,9 @@ const StatusSchema = new mongoose.Schema({
       },
       photo: {
         type: String,
-        required: true,
+      },
+      duration: {
+        type: Number,
       },
       createdAt: {
         type: Date,

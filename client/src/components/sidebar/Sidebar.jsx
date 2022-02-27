@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "./sidebar.css";
 import {
   RssFeed,
+  PermMedia,
   Chat,
   PlayCircleFilledOutlined,
   Group,
@@ -56,6 +57,13 @@ export default function Sidebar() {
             <li className="sidebarListItem">
               <RssFeed className="sidebarIcon" />
               <span className="sidebarListItemText">Feed</span>
+            </li>
+          </Link>
+          
+          <Link to="/status" className="link">
+            <li className="sidebarListItem">
+            <PermMedia htmlColor="black" />
+              <span className="sidebarListItemText">&ensp;&ensp;Status</span>
             </li>
           </Link>
 

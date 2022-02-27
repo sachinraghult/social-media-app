@@ -20,7 +20,6 @@ export default function SearchBox() {
         const startValue = await axios.get("/user/defaultValue", {
           headers: { authorization: authToken },
         });
-        console.log("start value ", startValue)
 
         startValue.data.map((r) =>
           options.push({
@@ -54,7 +53,6 @@ export default function SearchBox() {
 
         setDefaultOpt(options);
       } catch (err) {
-        console.log("nullllll")
         setDefaultOpt(null);
       }
     };

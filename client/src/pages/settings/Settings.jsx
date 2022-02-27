@@ -93,13 +93,13 @@ export default function Settings() {
           userId: user._id,
           photo : filename,
         };
-        console.log("new Post", newPost)
+
         setProfilePic(null);
 
         try {
           await axios.post("/upload/" + type, data);
         } catch (err) {}
-        console.log("upload", newPost)
+
         try {
           await axios.post("/post", newPost, {
             headers: { authorization: authToken },

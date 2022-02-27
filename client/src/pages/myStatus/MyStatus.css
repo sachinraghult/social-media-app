@@ -1,0 +1,22 @@
+.myStatusContainer {
+    display: flex;
+    width: 100%;
+  }
+  
+  .myStatus {
+    display: flex;
+    flex-direction: column;
+    flex: 5;
+  }
+
+  .myStatusShare {
+    margin-right: 10px;
+  }
+  
+  .myStatusPeopleDiv {
+    display: flex;
+    flex: 6;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  

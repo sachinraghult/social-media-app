@@ -19,7 +19,6 @@ export default function DisplayFriends({ type, userProfile }) {
   useEffect(() => {
     if (type === "Followers") setFriends([...userProfile.followers]);
     else if (type === "Following") setFriends([...userProfile.following]);
-    console.log(user);
   }, []);
 
   const handleFollow = async (e, id) => {
@@ -55,7 +54,6 @@ export default function DisplayFriends({ type, userProfile }) {
           {friends.length !== 0 &&
             friends.map((u) => (
               <>
-                {console.log("heyy ", friends)}
                 <li className="sidebarCloseFriend">
                   <div>
                     <Link className="link" to={`/user/${u._id}`}>

@@ -25,6 +25,7 @@ router.post("/", verify, async (req, res) => {
           {
             desc: req.body.desc,
             photo: req.body.photo,
+            duration: req.body.duration,
           },
         ],
         userId: req.user._id,
@@ -33,6 +34,7 @@ router.post("/", verify, async (req, res) => {
       const newStatus = new Status(statusData);
       const savedStatus = await newStatus.save();
 
+      await savedStatus.populate("userId", "name username _id profilePic");
       res.status(200).json(savedStatus);
     }
   } catch (err) {
@@ -56,13 +58,14 @@ router.put("/", verify, async (req, res) => {
           content: {
             desc: req.body.desc,
             photo: req.body.photo,
+            duration: req.body.duration,
             createdAt: Date.now(),
           },
         },
         lastStatusAt: Date.now(),
       },
       { new: true }
-    );
+    ).populate("userId", "name username _id profilePic");
 
     res.status(200).json(updatedStatus);
   } catch (err) {
@@ -88,11 +91,11 @@ router.put("/delete/:id", verify, async (req, res) => {
         $pull: { content: { _id: req.params.id } },
       },
       { new: true }
-    );
+    ).populate("userId", "name username _id profilePic");
 
     if (updatedStatus.content.length === 0) {
       await updatedStatus.delete();
-      return res.status(200).json("Status Deleted successfully!");
+      return res.status(200).json(null);
     }
 
     res.status(200).json(updatedStatus);
@@ -130,7 +133,7 @@ router.get("/user/:id", verify, async (req, res) => {
       "userId",
       "name username _id profilePic"
     );
-    if (!status) return res.status(404).json("Status not found!");
+    if (!status) return res.status(200).json(null);
 
     for (var i = 0; i < status.content.length; i++) {
       if (!status.content[i].seenBy.includes(user._id)) {
@@ -176,7 +179,6 @@ router.get("/", verify, async (req, res) => {
 
     res.status(200).json([unseenStatus, seenStatus]);
   } catch (err) {
-    console.log(err);
     res.status(500).json("Cannot get user status");
   }
 });
