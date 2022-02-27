@@ -1,43 +1,193 @@
+import React, { useEffect, useState, useContext } from "react";
+import { Context } from "../../context/Context";
 import Stories from "react-insta-stories";
 import "./ViewStatus.css";
-import { useNavigate } from "react-router-dom";
-import Page1 from "./Page1";
-import Page2 from "./Page2";
+import { useNavigate, useLocation, Link } from "react-router-dom";
+import axios from "../../axios";
+import CalculateTime from "../../components/calculateTime/CalculateTime";
+import moment from "moment";
 
 export default function ViewStatus() {
+  const location = useLocation();
+  const path = location.pathname.split("/")[2];
   const navigate = useNavigate();
+  const folder = "http://localhost:5000/image/";
+  const folder1 = "http://localhost:5000/video/";
+
+  const { user, authToken } = useContext(Context);
+
+  const [status, setStatus] = useState();
+  const [stories, setStories] = useState([]);
+
+  useEffect(() => {
+    const getStatus = async () => {
+      try {
+        const res = await axios.get("/status/user/" + path, {
+          headers: { authorization: authToken },
+        });
+
+        setStatus(res.data);
+      } catch (err) {}
+    };
+
+    getStatus();
+  }, []);
+
+  useEffect(() => {
+    {
+      status && createContent();
+    }
+  }, [status]);
+
+  const createVideoPage = (story) => (
+    <div>
+      <div
+        className="storyMainContainer"
+        style={{ display: "flex", flexDirection: "row", top: 0 }}
+      >
+        <img
+          className="sidebarCloseFriendImg"
+          src={folder + status.userId.profilePic}
+          alt=""
+        />
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <span className="sidebarFriendName">{status.userId.username}</span>
+          <i>
+            <small className="sidebarFriendName">
+              <CalculateTime
+                current={new Date(moment().format())}
+                previous={new Date(moment(story.createdAt).format())}
+              />
+            </small>
+          </i>
+        </div>
+      </div>
+
+      <div id="container">
+        <video
+          id="videobcg"
+          preload="auto"
+          autoPlay="true"
+          onLoadStart={(e) => (e.target.volume = 0.000001)}
+        >
+          <source src={folder1 + story.photo} type="video/mp4"></source>
+          Sorry, your browser does not support HTML5 video.
+        </video>
+      </div>
+
+      <video
+        id="myvid"
+        className="video"
+        preload="auto"
+        autoPlay="true"
+        onLoadStart={(e) => (e.target.volume = 1)}
+      >
+        <source src={folder1 + story.photo} type="video/mp4"></source>
+      </video>
+
+      <div
+        className="storyDescContainer"
+        style={{ display: "flex", flexDirection: "row" }}
+      >
+        {story.desc}
+      </div>
+    </div>
+  );
+
+  const createImagePage = (story) => {
+    return (
+      <div>
+        <div
+          className="storyMainContainer"
+          style={{ display: "flex", flexDirection: "row", top: 0 }}
+        >
+          <img
+            className="sidebarCloseFriendImg"
+            src={folder + status.userId.profilePic}
+            alt=""
+          />
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <span className="sidebarFriendName">{status.userId.username}</span>
+            <i>
+              <small className="sidebarFriendName">
+                <CalculateTime
+                  current={new Date(moment().format())}
+                  previous={new Date(moment(story.createdAt).format())}
+                />
+              </small>
+            </i>
+          </div>
+        </div>
+
+        <div id="container">
+          <img id="videobcg" src={folder + story.photo} alt="" />
+        </div>
+
+        <img className="statusImage" src={folder + story.photo} alt="" />
+
+        <div
+          className="storyDescContainer"
+          style={{ display: "flex", flexDirection: "row" }}
+        >
+          {story.desc}
+        </div>
+      </div>
+    );
+  };
+
+  const createTextPage = (story) => {
+    <div className="storyTextContainer">
+      <div className="statusText">
+        <h1 className="contentText">{story.desc}</h1>
+      </div>
+    </div>;
+  };
+
+  const createContent = () => {
+    setStories([]);
+    var tempStories = [];
+    status.content.map((s) => {
+      if (s.photo) {
+        /\.(mp4|ogg|webm)$/i.test(s.photo)
+          ? tempStories.push({
+              content: (props) => <div>{createVideoPage(s)}</div>,
+            })
+          : tempStories.push({
+              content: (props) => <div>{createImagePage(s)}</div>,
+            });
+      } else {
+        tempStories.push({
+          content: (props) => <div>{createTextPage(s)}</div>,
+        });
+      }
+    });
+
+    setStories([...tempStories]);
+  };
 
   const handleClose = () => {
     navigate("/");
   };
 
-  const stories = [
-    {
-      content: (props) => (
-        <div>
-          <Page1 />
-        </div>
-      ),
-    },
-
-    {
-      content: (props) => (
-        <div>
-          <Page2 />
-        </div>
-      ),
-    },
-  ];
   return (
-    <div className="statusCont">
-      <Stories
-        stories={stories}
-        defaultInterval={6000}
-        width={"100%"}
-        height={"100vh"}
-        loop={false}
-        onAllStoriesEnd={handleClose}
-      />
-    </div>
+    <>
+      {status && (
+        <div className="statusCont">
+          {stories.length > 0 && (
+            <>
+              <Stories
+                stories={stories}
+                defaultInterval={6000}
+                width={"100%"}
+                height={"100vh"}
+                loop={false}
+                currentIndex={status.startAt}
+                onAllStoriesEnd={handleClose}
+              />
+            </>
+          )}
+        </div>
+      )}
+    </>
   );
 }

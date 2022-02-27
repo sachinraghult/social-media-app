@@ -11,8 +11,12 @@ const StatusSchema = new mongoose.Schema({
         required: true,
       },
       createdAt: {
-          type: Date,
-          default: Date.now(),
+        type: Date,
+        default: Date.now(),
+      },
+      seenBy: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "User",
       },
     },
   ],
@@ -21,9 +25,9 @@ const StatusSchema = new mongoose.Schema({
     required: true,
     ref: "User",
   },
-  seenBy: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "User",
+  lastStatusAt: {
+    type: Date,
+    default: Date.now(),
   },
 });
 
