@@ -73,6 +73,37 @@ router.put("/", verify, async (req, res) => {
   }
 });
 
+//UPDATE SEEN BY
+router.put("/seen/:id/:index", verify, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json("User not found!");
+
+    const status = await Status.findById(req.params.id);
+    if (!status) return res.status(404).json("Status not found!");
+
+    if (status.content[req.params.index].seenBy.includes(user._id))
+      return res.status(200).json("Status already seen");
+
+    if (user._id.toString() === status.userId.toString())
+      return res.status(200).json("Status owned by you");
+
+    status.content[req.params.index].seenBy.push(user._id);
+
+    const updatedStatus = await Status.findByIdAndUpdate(
+      status._id,
+      {
+        $set: status,
+      },
+      { new: true }
+    ).populate("userId", "name username _id profilePic");
+
+    res.status(200).json(updatedStatus);
+  } catch (err) {
+    res.status(500).json("Cannot update status");
+  }
+});
+
 //DELETE SINGLE STATUS
 router.put("/delete/:id", verify, async (req, res) => {
   try {
@@ -180,6 +211,29 @@ router.get("/", verify, async (req, res) => {
     res.status(200).json([unseenStatus, seenStatus]);
   } catch (err) {
     res.status(500).json("Cannot get user status");
+  }
+});
+
+//GET SEEN BY USERS
+router.get("/seenUsers/:id", verify, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json("User not found!");
+
+    let status = await Status.findOne({ userId: user._id });
+    if (!status) return res.status(404).json("Status not found!");
+
+    await Promise.all(
+      status.content.map(async (story) => {
+        if (story._id.toString() === req.params.id) {
+          await story.seenBy.populate("name username _id profilePic");
+        }
+      })
+    );
+
+    return res.status(200).json(status);
+  } catch (err) {
+    res.status(500).json("Cannot get users seen by");
   }
 });
 

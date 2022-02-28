@@ -32,7 +32,10 @@ function Status() {
         <section className="stories">
           {status.length > 0 &&
             status[0].map((unseen) => (
-              <Link to={"/viewStatus/" + unseen.userId._id + "/status"} className="link">
+              <Link
+                to={"/viewStatus/" + unseen.userId._id + "/" + unseen.startAt}
+                className="link"
+              >
                 <div className="stories__item stories__item--active">
                   <button>
                     <div className="stories__item-picture">
@@ -51,7 +54,10 @@ function Status() {
 
           {status.length > 0 &&
             status[1].map((seen) => (
-              <Link to={"/viewStatus/" + seen.userId._id} className="link">
+              <Link
+                to={"/viewStatus/" + seen.userId._id + "/status"}
+                className="link"
+              >
                 <div className="stories__item stories__item--inactive">
                   <button>
                     <div className="stories__item-picture">

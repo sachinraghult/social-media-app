@@ -17,6 +17,8 @@ export default function ViewStatus() {
 
   const { user, authToken } = useContext(Context);
 
+  const [seenIndex, setSeenIndex] = useState(0);
+
   const [status, setStatus] = useState();
   const [stories, setStories] = useState([]);
 
@@ -26,7 +28,7 @@ export default function ViewStatus() {
         const res = await axios.get("/status/user/" + path, {
           headers: { authorization: authToken },
         });
-
+        console.log("res", res.data);
         setStatus(res.data);
       } catch (err) {}
     };
@@ -39,6 +41,10 @@ export default function ViewStatus() {
       status && createContent();
     }
   }, [status]);
+
+  useEffect(() => {
+    if (startWith !== "status") setSeenIndex(startWith);
+  }, []);
 
   const createVideoPage = (story) => (
     <div>
@@ -154,7 +160,7 @@ export default function ViewStatus() {
         /\.(mp4|ogg|webm)$/i.test(s.photo)
           ? tempStories.push({
               content: (props) => <div>{createVideoPage(s)}</div>,
-              duration: (s.duration <= 30) ? s.duration*1000 : 30000,
+              duration: s.duration <= 30 ? s.duration * 1000 : 30000,
             })
           : tempStories.push({
               content: (props) => <div>{createImagePage(s)}</div>,
@@ -167,6 +173,23 @@ export default function ViewStatus() {
     });
 
     setStories([...tempStories]);
+  };
+
+  const handleSeenBy = async () => {
+    try {
+      const res = await axios.put(
+        "/status/seen/" + status._id + "/" + seenIndex,
+        {},
+        {
+          headers: { authorization: authToken },
+        }
+      );
+
+      const updatedSeenIndex = parseInt(seenIndex) + 1;
+      setSeenIndex(updatedSeenIndex);
+      console.log("res", res.data);
+      console.log("seen", seenIndex);
+    } catch (err) {}
   };
 
   const handleClose = () => {
@@ -185,7 +208,9 @@ export default function ViewStatus() {
                 width={"100%"}
                 height={"100vh"}
                 loop={false}
-                currentIndex={(startWith === "status") ? status.startAt : parseInt(startWith)}
+                currentIndex={startWith === "status" ? 0 : parseInt(startWith)}
+                onStoryStart={handleSeenBy}
+                onStoryEnd={handleSeenBy}
                 onAllStoriesEnd={handleClose}
               />
             </>

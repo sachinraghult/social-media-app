@@ -69,10 +69,7 @@ function App() {
           path="/viewStatus/:id/:index"
           element={user ? <ViewStatus /> : <Login />}
         />
-        <Route
-          path="/status"
-          element={user ? <MyStatus /> : <Login />}
-        />
+        <Route path="/status" element={user ? <MyStatus /> : <Login />} />
       </Routes>
     </BrowserRouter>
   );
