@@ -82,13 +82,16 @@ router.put("/seen/:id/:index", verify, async (req, res) => {
     const status = await Status.findById(req.params.id);
     if (!status) return res.status(404).json("Status not found!");
 
-    if (status.content[req.params.index].seenBy.includes(user._id))
+    if (parseInt(req.params.index) >= status.content.length)
+      return res.status(200).json("Status limit exceded!");
+
+    if (status.content[parseInt(req.params.index)].seenBy.includes(user._id))
       return res.status(200).json("Status already seen");
 
     if (user._id.toString() === status.userId.toString())
       return res.status(200).json("Status owned by you");
 
-    status.content[req.params.index].seenBy.push(user._id);
+    status.content[parseInt(req.params.index)].seenBy.push(user._id);
 
     const updatedStatus = await Status.findByIdAndUpdate(
       status._id,
@@ -100,7 +103,7 @@ router.put("/seen/:id/:index", verify, async (req, res) => {
 
     res.status(200).json(updatedStatus);
   } catch (err) {
-    res.status(500).json("Cannot update status");
+    res.status(500).json("Cannot Update SeenBy");
   }
 });
 
@@ -223,15 +226,22 @@ router.get("/seenUsers/:id", verify, async (req, res) => {
     let status = await Status.findOne({ userId: user._id });
     if (!status) return res.status(404).json("Status not found!");
 
+    let seenUsers;
+
     await Promise.all(
-      status.content.map(async (story) => {
+      status.content.map(async (story, index) => {
         if (story._id.toString() === req.params.id) {
-          await story.seenBy.populate("name username _id profilePic");
+          await status.populate(
+            "content." + index + ".seenBy",
+            "name username _id profilePic"
+          );
+
+          seenUsers = story.seenBy;
         }
       })
     );
 
-    return res.status(200).json(status);
+    return res.status(200).json(seenUsers);
   } catch (err) {
     res.status(500).json("Cannot get users seen by");
   }

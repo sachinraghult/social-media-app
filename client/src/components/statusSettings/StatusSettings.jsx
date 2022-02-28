@@ -9,11 +9,17 @@ export default function StatusSettings({ status, receivedStatusState }) {
 
   const { user, authToken } = useContext(Context);
   const [seenByMode, setSeenByMode] = useState(false);
+  const [seenUsers, setSeenUsers] = useState([]);
 
   const handleSeenByUsers = async (e, id) => {
     e.preventDefault();
     setSeenByMode(true);
     try {
+      const res = await axios.get("/status/seenUsers/" + id, {
+        headers: { authorization: authToken },
+      });
+
+      setSeenUsers(res.data);
     } catch (err) {}
   };
 
@@ -48,7 +54,7 @@ export default function StatusSettings({ status, receivedStatusState }) {
       <div className="sidebarWrapper10">
         <div className="headingContainer">
           <span className="heading">
-            {seenByMode ? "Seen By" : "My Status"}
+            {seenByMode ? "Seen By - " + seenUsers.length : "My Status"}
           </span>
           {status && seenByMode ? (
             <button
@@ -149,6 +155,39 @@ export default function StatusSettings({ status, receivedStatusState }) {
               ))}
 
             {!status && <h4>No status yet : ( </h4>}
+          </ul>
+        )}
+        {seenByMode && seenUsers.length > 0 && (
+          <ul className="sidebarFriendList">
+            {seenUsers &&
+              seenUsers.map((user) => (
+                <li className="sidebarCloseFriend">
+                  <div>
+                    <Link className="link" to={`/user/${user._id}`}>
+                      <div style={{ display: "flex", flexDirection: "row" }}>
+                        <img
+                          className="sidebarCloseFriendImg"
+                          src={folder + user.profilePic}
+                          alt=""
+                        />
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <span className="sidebarFriendName">
+                            {user.username}
+                          </span>
+                          <small
+                            className="sidebarFriendName"
+                            style={{ color: "grey" }}
+                          >
+                            {user.name}
+                          </small>
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+                </li>
+              ))}
           </ul>
         )}
       </div>

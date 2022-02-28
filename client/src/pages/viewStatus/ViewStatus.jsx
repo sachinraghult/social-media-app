@@ -133,6 +133,7 @@ export default function ViewStatus() {
         <img className="statusImage" src={folder + story.photo} alt="" />
 
         <div
+          onClick={() => console.log("helli")}
           className="storyDescContainer"
           style={{ display: "flex", flexDirection: "row" }}
         >
@@ -144,11 +145,35 @@ export default function ViewStatus() {
 
   const createTextPage = (story) => {
     return (
-      <div className="storyTextContainer">
-        <div className="statusText">
-          <h1 className="contentText">{story.desc}</h1>
+      <>
+        <div
+          className="storyMainContainer"
+          style={{ display: "flex", flexDirection: "row", top: 0 }}
+        >
+          <img
+            className="sidebarCloseFriendImg"
+            src={folder + status.userId.profilePic}
+            alt=""
+          />
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <span className="sidebarFriendName">{status.userId.username}</span>
+            <i>
+              <small className="sidebarFriendName">
+                <CalculateTime
+                  current={new Date(moment().format())}
+                  previous={new Date(moment(story.createdAt).format())}
+                />
+              </small>
+            </i>
+          </div>
         </div>
-      </div>
+
+        <div className="storyTextContainer">
+          <div className="statusText">
+            <h1 className="contentText">{story.desc}</h1>
+          </div>
+        </div>
+      </>
     );
   };
 
@@ -176,20 +201,20 @@ export default function ViewStatus() {
   };
 
   const handleSeenBy = async () => {
-    try {
-      const res = await axios.put(
-        "/status/seen/" + status._id + "/" + seenIndex,
-        {},
-        {
-          headers: { authorization: authToken },
-        }
-      );
+    if (seenIndex < status.content.length) {
+      try {
+        const res = await axios.put(
+          "/status/seen/" + status._id + "/" + seenIndex,
+          {},
+          {
+            headers: { authorization: authToken },
+          }
+        );
 
-      const updatedSeenIndex = parseInt(seenIndex) + 1;
-      setSeenIndex(updatedSeenIndex);
-      console.log("res", res.data);
-      console.log("seen", seenIndex);
-    } catch (err) {}
+        const updatedSeenIndex = parseInt(seenIndex) + 1;
+        setSeenIndex(updatedSeenIndex);
+      } catch (err) {}
+    }
   };
 
   const handleClose = () => {
