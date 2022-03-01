@@ -195,8 +195,10 @@ router.get("/", verify, async (req, res) => {
       });
 
     if (!status) return res.status(404).json("No status!");
+
     let seenStatus = [];
     let unseenStatus = [];
+
     status.map((s) => {
       var seen = true;
 
@@ -208,7 +210,7 @@ router.get("/", verify, async (req, res) => {
         }
       }
 
-      if (seen) seenStatus.push(s._doc);
+      if (seen) seenStatus.push({ ...s._doc, startAt: 0 });
     });
 
     res.status(200).json([unseenStatus, seenStatus]);

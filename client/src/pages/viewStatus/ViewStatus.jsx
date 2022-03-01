@@ -10,7 +10,6 @@ import moment from "moment";
 export default function ViewStatus() {
   const location = useLocation();
   const path = location.pathname.split("/")[2];
-  const startWith = location.pathname?.split("/")[3];
   const navigate = useNavigate();
   const folder = "http://localhost:5000/image/";
   const folder1 = "http://localhost:5000/video/";
@@ -18,46 +17,75 @@ export default function ViewStatus() {
   const { user, authToken } = useContext(Context);
 
   const [seenIndex, setSeenIndex] = useState(0);
-
+  const [currentIndex, setCurrentIndex] = useState();
+  const [allStatus, setAllStatus] = useState([]);
   const [status, setStatus] = useState();
   const [stories, setStories] = useState([]);
 
   useEffect(() => {
-    const getStatus = async () => {
+    const getAllStatus = async () => {
       try {
-        const res = await axios.get("/status/user/" + path, {
+        const res = await axios.get("/status", {
           headers: { authorization: authToken },
         });
-        console.log("res", res.data);
-        setStatus(res.data);
+
+        setAllStatus([...res.data[0], ...res.data[1]]);
       } catch (err) {}
     };
 
-    getStatus();
+    getAllStatus();
   }, []);
 
   useEffect(() => {
+    for (var i = 0; i < allStatus.length; i++)
+      if (allStatus[i].userId._id.toString() === path) {
+        setStatus(allStatus[i]);
+        setCurrentIndex(i);
+        break;
+      }
+  }, [allStatus]);
+
+  useEffect(() => {
+    console.log("curInd", currentIndex);
+    setStatus(allStatus[currentIndex]);
+  }, [currentIndex]);
+
+  useEffect(() => {
     {
+      status && setSeenIndex(status.startAt);
       status && createContent();
     }
   }, [status]);
 
-  useEffect(() => {
-    if (startWith !== "status") setSeenIndex(startWith);
-  }, []);
+  const handleNextStatus = () => {
+    if (currentIndex + 1 < allStatus.length) {
+      var temp = currentIndex + 1;
+      setCurrentIndex(temp);
+    } else {
+      navigate("/");
+    }
+  };
 
   const createVideoPage = (story) => (
-    <div>
+    <div style={{ display: "flex", width: "100%" }}>
       <div
         className="storyMainContainer"
-        style={{ display: "flex", flexDirection: "row", top: 0 }}
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          top: 0,
+          zIndex: "10000",
+          width: "100%",
+        }}
       >
         <img
           className="sidebarCloseFriendImg"
           src={folder + status.userId.profilePic}
           alt=""
         />
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        <div
+          style={{ display: "flex", flexDirection: "column", width: "100%" }}
+        >
           <span className="sidebarFriendName">{status.userId.username}</span>
           <i>
             <small className="sidebarFriendName">
@@ -67,6 +95,19 @@ export default function ViewStatus() {
               />
             </small>
           </i>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            float: "right",
+            marginRight: "100px",
+          }}
+        >
+          <Link className="link" to="/">
+            <span>❌</span>
+            <span style={{ marginLeft: "5px" }}>Close</span>
+          </Link>
         </div>
       </div>
 
@@ -103,17 +144,25 @@ export default function ViewStatus() {
 
   const createImagePage = (story) => {
     return (
-      <div>
+      <div style={{ display: "flex", width: "100%" }}>
         <div
           className="storyMainContainer"
-          style={{ display: "flex", flexDirection: "row", top: 0 }}
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            top: 0,
+            zIndex: "10000",
+            width: "100%",
+          }}
         >
           <img
             className="sidebarCloseFriendImg"
             src={folder + status.userId.profilePic}
             alt=""
           />
-          <div style={{ display: "flex", flexDirection: "column" }}>
+          <div
+            style={{ display: "flex", flexDirection: "column", width: "100%" }}
+          >
             <span className="sidebarFriendName">{status.userId.username}</span>
             <i>
               <small className="sidebarFriendName">
@@ -124,6 +173,19 @@ export default function ViewStatus() {
               </small>
             </i>
           </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              float: "right",
+              marginRight: "100px",
+            }}
+          >
+            <Link className="link" to="/">
+              <span>❌</span>
+              <span style={{ marginLeft: "5px" }}>Close</span>
+            </Link>
+          </div>
         </div>
 
         <div id="container">
@@ -133,7 +195,6 @@ export default function ViewStatus() {
         <img className="statusImage" src={folder + story.photo} alt="" />
 
         <div
-          onClick={() => console.log("helli")}
           className="storyDescContainer"
           style={{ display: "flex", flexDirection: "row" }}
         >
@@ -145,17 +206,25 @@ export default function ViewStatus() {
 
   const createTextPage = (story) => {
     return (
-      <>
+      <div style={{ display: "flex", width: "100%", zIndex: "100000" }}>
         <div
           className="storyMainContainer"
-          style={{ display: "flex", flexDirection: "row", top: 0 }}
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            top: 0,
+            zIndex: "100000",
+            width: "100%",
+          }}
         >
           <img
             className="sidebarCloseFriendImg"
             src={folder + status.userId.profilePic}
             alt=""
           />
-          <div style={{ display: "flex", flexDirection: "column" }}>
+          <div
+            style={{ display: "flex", flexDirection: "column", width: "100%" }}
+          >
             <span className="sidebarFriendName">{status.userId.username}</span>
             <i>
               <small className="sidebarFriendName">
@@ -166,6 +235,20 @@ export default function ViewStatus() {
               </small>
             </i>
           </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              float: "right",
+              marginRight: "100px",
+              zIndex: "100000",
+            }}
+          >
+            <Link className="link" to="/">
+              <span>❌</span>
+              <span style={{ marginLeft: "5px" }}>Close</span>
+            </Link>
+          </div>
         </div>
 
         <div className="storyTextContainer">
@@ -173,11 +256,12 @@ export default function ViewStatus() {
             <h1 className="contentText">{story.desc}</h1>
           </div>
         </div>
-      </>
+      </div>
     );
   };
 
   const createContent = () => {
+    console.log("single", status.content);
     setStories([]);
     var tempStories = [];
     status.content.map((s) => {
@@ -217,10 +301,6 @@ export default function ViewStatus() {
     }
   };
 
-  const handleClose = () => {
-    navigate("/");
-  };
-
   return (
     <>
       {status && (
@@ -233,10 +313,10 @@ export default function ViewStatus() {
                 width={"100%"}
                 height={"100vh"}
                 loop={false}
-                currentIndex={startWith === "status" ? 0 : parseInt(startWith)}
+                currentIndex={0}
                 onStoryStart={handleSeenBy}
                 onStoryEnd={handleSeenBy}
-                onAllStoriesEnd={handleClose}
+                onAllStoriesEnd={handleNextStatus}
               />
             </>
           )}

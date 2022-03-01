@@ -33,7 +33,7 @@ function Status() {
           {status.length > 0 &&
             status[0].map((unseen) => (
               <Link
-                to={"/viewStatus/" + unseen.userId._id + "/" + unseen.startAt}
+                to={"/viewStatus/" + unseen.userId._id}
                 className="link"
               >
                 <div className="stories__item stories__item--active">
@@ -55,7 +55,7 @@ function Status() {
           {status.length > 0 &&
             status[1].map((seen) => (
               <Link
-                to={"/viewStatus/" + seen.userId._id + "/status"}
+                to={"/viewStatus/" + seen.userId._id}
                 className="link"
               >
                 <div className="stories__item stories__item--inactive">
