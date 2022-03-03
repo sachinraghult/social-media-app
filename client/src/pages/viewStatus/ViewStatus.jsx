@@ -264,24 +264,26 @@ export default function ViewStatus() {
     console.log("single", status.content);
     setStories([]);
     var tempStories = [];
-    status.content.map((s) => {
-      if (s.photo) {
-        /\.(mp4|ogg|webm)$/i.test(s.photo)
-          ? tempStories.push({
-              content: (props) => <div>{createVideoPage(s)}</div>,
-              duration: s.duration <= 30 ? s.duration * 1000 : 30000,
-            })
-          : tempStories.push({
-              content: (props) => <div>{createImagePage(s)}</div>,
-            });
-      } else {
-        tempStories.push({
-          content: (props) => <div>{createTextPage(s)}</div>,
-        });
-      }
-    });
+    if (status.content.length > 0) {
+      status.content.map((s) => {
+        if (s.photo) {
+          /\.(mp4|ogg|webm)$/i.test(s.photo)
+            ? tempStories.push({
+                content: (props) => <div>{createVideoPage(s)}</div>,
+                duration: s.duration <= 30 ? s.duration * 1000 : 30000,
+              })
+            : tempStories.push({
+                content: (props) => <div>{createImagePage(s)}</div>,
+              });
+        } else {
+          tempStories.push({
+            content: (props) => <div>{createTextPage(s)}</div>,
+          });
+        }
+      });
 
-    setStories([...tempStories]);
+      setStories([...tempStories]);
+    }
   };
 
   const handleSeenBy = async () => {

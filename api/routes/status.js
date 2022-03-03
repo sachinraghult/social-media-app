@@ -210,7 +210,7 @@ router.get("/", verify, async (req, res) => {
         }
       }
 
-      if (seen) seenStatus.push({ ...s._doc, startAt: 0 });
+      if (seen) seenStatus.push(s._doc);
     });
 
     res.status(200).json([unseenStatus, seenStatus]);
